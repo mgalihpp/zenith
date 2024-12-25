@@ -1,3 +1,6 @@
+import { User } from '@prisma/client';
+import { JWTPayload } from 'jose';
+
 export type SessionPayload = {
   userId: string;
   expireAt: Date;
@@ -16,3 +19,12 @@ export type LoginAction = (
 export type SignUpAction = (
   params: Credentials
 ) => Promise<ServerActionResponse>;
+
+export type Session = JWTPayload & {
+  userId: string;
+};
+
+export type ValidateSession = {
+  user?: Omit<User, 'passwordHash' | 'googleId'>;
+  session?: Session;
+};
