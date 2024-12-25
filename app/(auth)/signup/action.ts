@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import SessionService from '@/lib/session';
+import SessionService from '@/services/session.service';
 import { signUpSchema } from '@/lib/validation';
 import { SignUpAction } from '@/types/auth';
 import { hash } from '@node-rs/argon2';

@@ -1,14 +1,23 @@
+import ky, { KyInstance, Options } from 'ky';
+
 class ApiRequest {
+  private ky: KyInstance;
+
+  constructor(opts?: Options) {
+    this.ky = ky.create(opts);
+  }
+
   async get<T>(
     url: string,
-    options: RequestInit = {}
+    options: Options = {}
   ): Promise<ApiRequestResponse<T>> {
-    const res = await fetch(`${this.getBaseUrl()}${url}`, {
-      method: 'GET',
-      ...options,
-    });
+    const json = await this.ky
+      .get(`${this.getBaseUrl()}${url}`, {
+        ...options,
+      })
+      .json<ApiRequestResponse<T>>();
 
-    return res.json() as ApiRequestResponse<T>;
+    return json;
   }
 
   getBaseUrl() {
@@ -20,4 +29,4 @@ class ApiRequest {
 
 export const api = new ApiRequest();
 
-export default api;
+export default ApiRequest;

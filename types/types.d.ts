@@ -14,7 +14,7 @@ type ApiResponse<T = unknown> = (params: {
 }) => void;
 
 type ApiRequestResponse<T = unknown> = {
-  data?: T;
+  data: T;
   message?: string;
   status?: boolean;
   statusCode?: number;

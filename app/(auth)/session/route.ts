@@ -1,12 +1,9 @@
-import { db } from '@/lib/prisma';
-import SessionService from '@/lib/session';
+import SessionService from '@/services/session.service';
 import { sendResponse } from '@/lib/utils';
-import { JWTPayload } from 'jose';
 import { NextRequest } from 'next/server';
 
 export async function GET(req: NextRequest) {
   const session = new SessionService();
-
   const cookies = req.cookies;
   const sessionCookie = cookies.get('session')?.value;
 
@@ -17,25 +14,16 @@ export async function GET(req: NextRequest) {
     });
   }
 
-  const payloadData = (await session.decrypt(sessionCookie)) as JWTPayload & {
-    userId: string;
-  };
+  const sessionData = await session.decrypt(sessionCookie);
 
-  if (!payloadData) {
+  if (!sessionData) {
     return sendResponse({
       message: 'Unauthorized',
       statusCode: 401,
     });
   }
 
-  const user = await db.user.findFirst({
-    where: {
-      id: payloadData.userId,
-    },
-    omit: {
-      passwordHash: true,
-    },
-  });
+  const user = await session.getUser(sessionData.userId);
 
   if (!user) {
     return sendResponse({
