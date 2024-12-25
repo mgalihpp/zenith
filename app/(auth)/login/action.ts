@@ -1,7 +1,7 @@
 'use server';
 
 import { db } from '@/lib/prisma';
-import SessionService from '@/lib/session';
+import SessionService from '@/services/session.service';
 import { loginSchema } from '@/lib/validation';
 import { LoginAction } from '@/types/auth';
 import { verify } from '@node-rs/argon2';
