@@ -66,6 +66,14 @@ class PrismaQueryHelper {
       },
     } satisfies Prisma.UserFindFirstArgs;
   }
+
+  getCommentDataInclude(loggedInUserId: string) {
+    return {
+      user: {
+        select: this.getUserDataSelect(loggedInUserId),
+      },
+    } satisfies Prisma.CommentInclude;
+  }
 }
 
 export default PrismaQueryHelper;
