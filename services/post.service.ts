@@ -23,7 +23,7 @@ class PostService extends Service {
     return post;
   }
 
-  async getPosts(user: GetPostsParams, opts?: Prisma.PostFindManyArgs) {
+  async getPosts(user?: { id?: string }, opts?: Prisma.PostFindManyArgs) {
     const posts = await this.db.post.findMany({
       include: this.prismaQueryHelper.getPostsDataInclude(user?.id),
       ...opts,

@@ -22,6 +22,6 @@ export interface LikeInfo {
   isLikedByUser: boolean;
 }
 
-export type PostIdParams = {
+export type PostIdParams = Promise<{
   postId: string;
-};
+}>;
