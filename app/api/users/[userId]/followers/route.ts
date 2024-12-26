@@ -43,6 +43,7 @@ export async function GET(
     console.error(error);
     return sendResponse({
       message: 'Internal server error',
+      status: false,
       statusCode: 500,
       httpCode: 500,
     });
@@ -75,6 +76,7 @@ export async function POST(
     console.error(error);
     return sendResponse({
       message: 'Internal server error',
+      status: false,
       statusCode: 500,
       httpCode: 500,
     });
@@ -106,6 +108,7 @@ export async function DELETE(
     console.error(error);
     return sendResponse({
       message: 'Internal server error',
+      status: false,
       statusCode: 500,
       httpCode: 500,
     });

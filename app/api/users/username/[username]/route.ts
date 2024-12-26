@@ -37,6 +37,7 @@ export async function GET(
     console.error(error);
     return sendResponse({
       message: 'Internal server error',
+      status: false,
       statusCode: 500,
       httpCode: 500,
     });
