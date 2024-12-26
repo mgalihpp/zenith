@@ -5,11 +5,16 @@ import { CommentPage } from '@/types/comment';
 import { PostIdParams } from '@/types/post';
 import { NextRequest } from 'next/server';
 
-export async function GET(req: NextRequest, params: PostIdParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const CURSOR = req.nextUrl.searchParams.get('cursor') || undefined;
 
     const DEFAULT_COMMENT_PAGESIZE = 5;
+
+    const { postId } = await params;
 
     const { user } = await getSession();
 
@@ -20,17 +25,13 @@ export async function GET(req: NextRequest, params: PostIdParams) {
       });
     }
 
-    const comments = await new CommentService().getComments(
-      user,
-      params.postId,
-      {
-        orderBy: {
-          createdAt: 'asc',
-        },
-        take: DEFAULT_COMMENT_PAGESIZE + 1,
-        cursor: CURSOR ? { id: CURSOR } : undefined,
-      }
-    );
+    const comments = await new CommentService().getComments(user, postId, {
+      orderBy: {
+        createdAt: 'asc',
+      },
+      take: DEFAULT_COMMENT_PAGESIZE + 1,
+      cursor: CURSOR ? { id: CURSOR } : undefined,
+    });
 
     const PREVIOUS_CURSOR =
       comments.length > DEFAULT_COMMENT_PAGESIZE

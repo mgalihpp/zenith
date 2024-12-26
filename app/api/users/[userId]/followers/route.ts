@@ -6,10 +6,12 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     const { user: loggedInUser } = await getSession();
+
+    const { userId } = await params;
 
     if (!loggedInUser) {
       return sendResponse({
@@ -19,7 +21,7 @@ export async function GET(
     }
 
     const user = await new UserService().getUserFollowersCount(
-      params.userId,
+      userId,
       loggedInUser.id
     );
 
@@ -52,10 +54,12 @@ export async function GET(
 
 export async function POST(
   req: NextRequest,
-  { params }: { params: { userId: string } }
+  { params }: { params: Promise<{ userId: string }> }
 ) {
   try {
     const { user: loggedInUser } = await getSession();
+
+    const { userId } = await params;
 
     if (!loggedInUser) {
       return sendResponse({
@@ -66,7 +70,7 @@ export async function POST(
 
     await new UserService().followUserAndSendNotification(
       loggedInUser.id,
-      params.userId
+      userId
     );
 
     return sendResponse({
