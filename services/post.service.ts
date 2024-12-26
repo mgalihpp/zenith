@@ -1,15 +1,26 @@
-import PrismaQueryHelper from '@/helpers/prismaQuery';
-import { db } from '@/lib/prisma';
 import { GetPostsParams, PostData } from '@/types/post';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Post, Prisma } from '@prisma/client';
+import Service from '.';
+import LikeService from './like.service';
+import NotificationService from './notification.service';
 
-class PostService {
-  private prismaQueryHelper: PrismaQueryHelper;
-  private db: PrismaClient;
-
+class PostService extends Service {
   constructor() {
-    this.prismaQueryHelper = new PrismaQueryHelper();
-    this.db = db;
+    super();
+  }
+
+  async getPost(postId: string, opts?: Prisma.PostFindUniqueArgs) {
+    const post = await this.db.post.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        userId: true,
+      },
+      ...opts,
+    });
+
+    return post;
   }
 
   async getPosts(user: GetPostsParams, opts?: Prisma.PostFindManyArgs) {
@@ -19,6 +30,52 @@ class PostService {
     });
 
     return posts as PostData[];
+  }
+
+  async getPostAndCheckIfUserLiked(user: GetPostsParams, postId: string) {
+    const post = await this.db.post.findUnique({
+      where: {
+        id: postId,
+      },
+      select: {
+        likes: {
+          where: {
+            userId: user?.id,
+          },
+        },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  }
+
+  async likePostAndSendNotification(user: GetPostsParams, post: Post) {
+    const likeService = new LikeService(user.id, post.id);
+    const notificationService = new NotificationService();
+
+    await this.db.$transaction(async () => {
+      await Promise.all([
+        likeService.createLike(),
+        notificationService.createNotification(user.id, post.userId, 'LIKE'),
+      ]);
+    });
+  }
+
+  async unlikePostAndCancelNotification(user: GetPostsParams, post: Post) {
+    const likeService = new LikeService(user.id, post.id);
+    const notificationService = new NotificationService();
+
+    await this.db.$transaction(async () => {
+      await Promise.all([
+        likeService.deleteLike(),
+        notificationService.deleteNotification(user.id, post.userId, 'LIKE'),
+      ]);
+    });
   }
 }
 
