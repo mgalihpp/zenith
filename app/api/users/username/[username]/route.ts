@@ -6,10 +6,12 @@ import { NextRequest } from 'next/server';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { username: string } }
+  { params }: { params: Promise<{ username: string }> }
 ) {
   try {
     const { user: loggedInUser } = await getSession();
+
+    const { username } = await params;
 
     if (!loggedInUser) {
       return sendResponse({
@@ -18,7 +20,7 @@ export async function GET(
       });
     }
 
-    const user = await new UserService().getUsersByUsername(params.username, {
+    const user = await new UserService().getUsersByUsername(username, {
       select: PrismaQueryHelper.prototype.getUserDataSelect(loggedInUser.id),
     });
 

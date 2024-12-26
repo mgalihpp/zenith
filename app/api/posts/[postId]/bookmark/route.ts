@@ -5,9 +5,14 @@ import { BookmarkInfo } from '@/types/bookmark';
 import { PostIdParams } from '@/types/post';
 import { NextRequest } from 'next/server';
 
-export async function GET(req: NextRequest, params: PostIdParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -18,7 +23,7 @@ export async function GET(req: NextRequest, params: PostIdParams) {
 
     const bookmark = await new BookmarkService().checkIfUserBookmarkedPost(
       user,
-      params.postId
+      postId
     );
 
     const data: BookmarkInfo = {
@@ -39,9 +44,14 @@ export async function GET(req: NextRequest, params: PostIdParams) {
   }
 }
 
-export async function POST(req: NextRequest, params: PostIdParams) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -50,7 +60,7 @@ export async function POST(req: NextRequest, params: PostIdParams) {
       });
     }
 
-    await new BookmarkService().createBookmark(user, params.postId);
+    await new BookmarkService().createBookmark(user, postId);
 
     return sendResponse({
       statusCode: 201,
@@ -66,9 +76,14 @@ export async function POST(req: NextRequest, params: PostIdParams) {
   }
 }
 
-export async function DELETE(req: NextRequest, params: PostIdParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -77,7 +92,7 @@ export async function DELETE(req: NextRequest, params: PostIdParams) {
       });
     }
 
-    await new BookmarkService().deleteBookmark(user, params.postId);
+    await new BookmarkService().deleteBookmark(user, postId);
 
     return sendResponse({
       statusCode: 200,

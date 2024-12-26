@@ -4,9 +4,14 @@ import { getSession } from '@/services/session.service';
 import { LikeInfo, PostIdParams } from '@/types/post';
 import { NextRequest } from 'next/server';
 
-export async function GET(req: NextRequest, params: PostIdParams) {
+export async function GET(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -17,7 +22,7 @@ export async function GET(req: NextRequest, params: PostIdParams) {
 
     const post = await new PostService().getPostAndCheckIfUserLiked(
       user,
-      params.postId
+      postId
     );
 
     if (!post) {
@@ -44,9 +49,14 @@ export async function GET(req: NextRequest, params: PostIdParams) {
   }
 }
 
-export async function POST(req: NextRequest, params: PostIdParams) {
+export async function POST(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -55,7 +65,7 @@ export async function POST(req: NextRequest, params: PostIdParams) {
       });
     }
 
-    const post = await new PostService().getPost(params.postId);
+    const post = await new PostService().getPost(postId);
 
     if (!post) {
       return sendResponse({
@@ -78,9 +88,14 @@ export async function POST(req: NextRequest, params: PostIdParams) {
   }
 }
 
-export async function DELETE(req: NextRequest, params: PostIdParams) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: PostIdParams }
+) {
   try {
     const { user } = await getSession();
+
+    const { postId } = await params;
 
     if (!user) {
       return sendResponse({
@@ -89,7 +104,7 @@ export async function DELETE(req: NextRequest, params: PostIdParams) {
       });
     }
 
-    const post = await new PostService().getPost(params.postId);
+    const post = await new PostService().getPost(postId);
 
     if (!post) {
       return sendResponse({
