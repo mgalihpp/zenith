@@ -14,9 +14,6 @@ class PostService extends Service {
       where: {
         id: postId,
       },
-      select: {
-        userId: true,
-      },
       ...opts,
     });
 
