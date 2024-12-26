@@ -1,15 +1,10 @@
-import PrismaQueryHelper from '@/helpers/prismaQuery';
-import { db } from '@/lib/prisma';
 import { GetPostsParams, PostData } from '@/types/post';
-import { Prisma, PrismaClient } from '@prisma/client';
+import { Prisma } from '@prisma/client';
+import Service from '.';
 
-class PostService {
-  private prismaQueryHelper: PrismaQueryHelper;
-  private db: PrismaClient;
-
+class PostService extends Service {
   constructor() {
-    this.prismaQueryHelper = new PrismaQueryHelper();
-    this.db = db;
+    super();
   }
 
   async getPosts(user: GetPostsParams, opts?: Prisma.PostFindManyArgs) {

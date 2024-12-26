@@ -43,7 +43,7 @@ class PrismaQueryHelper {
       updatedAt: true,
       followers: {
         where: {
-          followingId: loggedInUserId,
+          followerId: loggedInUserId,
         },
         select: {
           followerId: true,

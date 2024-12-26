@@ -15,3 +15,13 @@ export interface PostsPage {
   posts: PostData[];
   nextCursor: string | null;
 }
+
+export type FollowerInfo = {
+  followers: number;
+  isFollowedByUser: boolean;
+};
+
+export interface LikeInfo {
+  likes: number;
+  isLikedByUser: boolean;
+}
