@@ -1,22 +1,12 @@
 'use client';
 
-import React, {
-  cache,
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from 'react';
+import React, { cache, createContext, useEffect, useState } from 'react';
 import { User } from '@prisma/client';
-import api from '@/lib/api';
+import { api } from '@/lib/api';
 
 type Session = Omit<User, 'passwordHash'>;
 
-const SessionContext = createContext<Session | null>(null);
-
-export function useSession() {
-  return useContext(SessionContext);
-}
+export const SessionContext = createContext<Session | null>(null);
 
 export default function SessionProvider({
   children,

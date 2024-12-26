@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import SearchBar from './SearchBar';
+import SearchBar from '@/components/Navbar/SearchBar';
 
 export default function Navbar() {
   return (

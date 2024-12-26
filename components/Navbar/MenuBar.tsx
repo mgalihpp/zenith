@@ -1,7 +1,7 @@
 'use client';
 
-import { useSession } from '@/components/SessionProvider';
-import { Button } from '../ui/button';
+import { useSession } from '@/hooks/useSession';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Bookmark, Home } from 'lucide-react';
 
