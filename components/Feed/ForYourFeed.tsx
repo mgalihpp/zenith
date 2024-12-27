@@ -5,6 +5,7 @@ import Post from '@/components/Post/Post';
 import { api } from '@/lib/api';
 import { PostsPage } from '@/types/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { Loader2 } from 'lucide-react';
 
 export default function ForYouFeed() {
   const {
@@ -52,10 +53,14 @@ export default function ForYouFeed() {
   }
 
   return (
-    <InfiniteScrollWrapper className="space-y-5" onBottomReached={() => {}}>
+    <InfiniteScrollWrapper
+      className="space-y-5"
+      onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
+    >
       {posts.map((post) => (
         <Post post={post} key={post.id} />
       ))}
+      {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
     </InfiniteScrollWrapper>
   );
 }
