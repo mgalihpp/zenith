@@ -3,12 +3,13 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { BookmarkInfo } from '@/types/bookmark';
 import {
-  QueryClient,
   QueryKey,
   useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query';
 import { Bookmark } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type BookmarkButtonProps = {
   postId: string;
@@ -18,7 +19,7 @@ type BookmarkButtonProps = {
 export default function BookmarkButton(props: BookmarkButtonProps) {
   const { toast } = useToast();
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const queryKey: QueryKey = ['bookmark-info', props.postId];
 
@@ -64,16 +65,18 @@ export default function BookmarkButton(props: BookmarkButtonProps) {
   });
 
   return (
-    <button
-      className="flex items-center gap-2 disabled:cursor-not-allowed"
+    <Button
+      className="flex items-center gap-2 relative group text-muted-foreground"
       onClick={() => mutate()}
       disabled={isFetching || isPending}
+      variant="ghost"
+      size="icon"
     >
       <Bookmark
-        className={cn('size-5', {
-          'fill-primary text-primary': data.isBookmarkedByUser,
+        className={cn('size-5 group-hover:text-blue-600', {
+          'text-blue-600 fill-blue-600': data.isBookmarkedByUser,
         })}
       />
-    </button>
+    </Button>
   );
 }

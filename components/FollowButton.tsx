@@ -2,7 +2,7 @@
 
 import { FollowerInfo } from '@/types/post';
 import { useToast } from '@/hooks/use-toast';
-import { QueryClient, QueryKey, useMutation } from '@tanstack/react-query';
+import { QueryKey, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useFollowerInfo } from '@/hooks/useFollowerInfo';
 import { api } from '@/lib/api';
 import LoadingButton from '@/components/LoadingButton';
@@ -15,7 +15,7 @@ type FollowButtonProps = {
 export default function FollowButton(props: FollowButtonProps) {
   const { toast } = useToast();
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
   const queryKey: QueryKey = ['follower-info', props.userId];
 
   const { data, refetch, isFetching } = useFollowerInfo(props);

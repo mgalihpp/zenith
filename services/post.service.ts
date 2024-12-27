@@ -1,4 +1,4 @@
-import { GetPostsParams, PostData } from '@/types/post';
+import { CreatePostParams, GetPostsParams, PostData } from '@/types/post';
 import { Post, Prisma } from '@prisma/client';
 import Service from '.';
 import LikeService from './like.service';
@@ -7,6 +7,21 @@ import NotificationService from './notification.service';
 class PostService extends Service {
   constructor() {
     super();
+  }
+
+  async createPost({ content, userId, mediaIds }: CreatePostParams) {
+    const newPost = await this.db.post.create({
+      data: {
+        content,
+        userId,
+        attachments: {
+          connect: mediaIds?.map((mediaId) => ({ id: mediaId })),
+        },
+      },
+      include: this.prismaQueryHelper.getPostsDataInclude(userId),
+    });
+
+    return newPost;
   }
 
   async getPost(postId: string, opts?: Prisma.PostFindUniqueArgs) {

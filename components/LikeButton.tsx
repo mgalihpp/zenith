@@ -5,12 +5,13 @@ import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { LikeInfo } from '@/types/post';
 import {
-  QueryClient,
   QueryKey,
   useMutation,
   useQuery,
+  useQueryClient,
 } from '@tanstack/react-query';
 import { Heart } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 type LikeButtonProps = {
   postId: string;
@@ -20,7 +21,7 @@ type LikeButtonProps = {
 export default function LikeButton(props: LikeButtonProps) {
   const { toast } = useToast();
 
-  const queryClient = new QueryClient();
+  const queryClient = useQueryClient();
 
   const queryKey: QueryKey = ['like-info', props.postId];
 
@@ -63,19 +64,28 @@ export default function LikeButton(props: LikeButtonProps) {
   });
 
   return (
-    <button
-      className="flex items-center gap-2 disabled:cursor-not-allowed"
+    <Button
+      className="flex items-center gap-2 relative group text-muted-foreground"
       onClick={() => mutate()}
       disabled={isPending || isFetching}
+      variant="ghost"
+      size="icon"
     >
       <Heart
-        className={cn('size-5', {
-          'fill-red-500 text-red-500': data.isLikedByUser,
+        className={cn('size-5 group-hover:text-pink-500', {
+          'fill-pink-500 text-pink-500': data.isLikedByUser,
         })}
       />
-      <span className="text-sm font-medium tabular-nums">
-        {data.likes} <span className="hidden sm:inline">likes</span>
+      <span
+        className={cn(
+          'absolute left-full top-1/2 transform -translate-y-1/2 text-xs font-medium tabular-nums group-hover:text-pink-500 transition-colors',
+          {
+            'text-pink-500': data.isLikedByUser,
+          }
+        )}
+      >
+        {data.likes}
       </span>
-    </button>
+    </Button>
   );
 }

@@ -54,7 +54,7 @@ export default function ForYouFeed() {
 
   return (
     <InfiniteScrollWrapper
-      className="space-y-5"
+      // className="space-y-5"
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
       {posts.map((post) => (

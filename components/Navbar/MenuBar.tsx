@@ -12,7 +12,7 @@ type MenuBarProps = {
 export default function MenuBar({ className }: MenuBarProps) {
   const user = useSession();
 
-  if (!user) return null;
+  // if (!user) return null;
 
   // TODO: NOTIFICATION
 

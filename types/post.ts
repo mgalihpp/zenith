@@ -25,3 +25,9 @@ export interface LikeInfo {
 export type PostIdParams = Promise<{
   postId: string;
 }>;
+
+export type CreatePostParams = {
+  content: string;
+  userId?: string;
+  mediaIds?: string[];
+};

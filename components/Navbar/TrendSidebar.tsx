@@ -31,7 +31,7 @@ async function WhoToFollow() {
   });
 
   return (
-    <div className="space-y-5 rounded-2xl bg-card shadow-sm p-5">
+    <div className="space-y-5 rounded-2xl bg-card shadow-sm p-5 border">
       <div className="text-xl font-bold">Who to follow</div>
       {usersToFollow.map((user) => (
         <div key={user.id} className="flex items-center justify-between gap-2">
@@ -102,7 +102,7 @@ async function TrendingTopics() {
   const topics = await getTrendingTopics();
 
   return (
-    <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm">
+    <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm border">
       <div className="text-xl font-bold">Trending topics</div>
       {topics.map((topic) => {
         const title = topic.hashtag.split('#')[1];
