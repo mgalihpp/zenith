@@ -8,6 +8,17 @@ class UserService extends Service {
     super();
   }
 
+  async updateUserAvatar(userId: string, avatarUrl: string) {
+    await this.db.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        avatarUrl,
+      },
+    });
+  }
+
   async getUsersByUsername(
     username: User['username'],
     opts?: Prisma.UserFindManyArgs
