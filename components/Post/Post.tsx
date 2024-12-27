@@ -9,6 +9,8 @@ import PostMoreButton from '@/components/Post/PostMoreButton';
 import Linkify from '@/components/Linkify';
 import MediaPreviews from '@/components/Post/MediaPreviews';
 import LikeButton from '@/components/LikeButton';
+import CommentButton from '@/components/CommentButton';
+import BookmarkButton from '@/components/BookmarkButton';
 
 type PostProps = { post: PostData };
 
@@ -64,8 +66,18 @@ export default function Post({ post }: PostProps) {
               ),
             }}
           />
+          <CommentButton post={post} onClick={() => setShowComments(true)} />
         </div>
+        <BookmarkButton
+          postId={post.id}
+          initialState={{
+            isBookmarkedByUser: post.bookmarks.some(
+              ({ userId }) => userId === user?.id
+            ),
+          }}
+        />
       </div>
+      {/* TODO: SHOW COMMENTS */}
     </article>
   );
 }
