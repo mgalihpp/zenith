@@ -1,3 +1,5 @@
+'use client';
+
 import { FollowerInfo } from '@/types/post';
 import { useToast } from '@/hooks/use-toast';
 import { QueryClient, QueryKey, useMutation } from '@tanstack/react-query';

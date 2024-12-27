@@ -1,4 +1,5 @@
 import ForYouFeed from '@/components/Feed/ForYourFeed';
+import TrendSidebar from '@/components/Navbar/TrendSidebar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export default function HomePage() {
@@ -16,6 +17,7 @@ export default function HomePage() {
           <TabsContent value="following">{/*  */}</TabsContent>
         </Tabs>
       </div>
+      <TrendSidebar />
     </div>
   );
 }

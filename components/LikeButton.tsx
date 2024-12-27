@@ -1,3 +1,5 @@
+'use client';
+
 import { useToast } from '@/hooks/use-toast';
 import { api } from '@/lib/api';
 import { cn } from '@/lib/utils';
