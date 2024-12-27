@@ -1,3 +1,5 @@
+'use client';
+
 import { useSession } from '@/hooks/useSession';
 import { FollowerInfo } from '@/types/post';
 import { UserData } from '@/types/user';
