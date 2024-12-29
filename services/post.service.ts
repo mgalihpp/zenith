@@ -89,6 +89,17 @@ class PostService extends Service {
       ]);
     });
   }
+
+  async deletePost(postId: string, userId: string) {
+    const post = await this.db.post.delete({
+      where: {
+        id: postId,
+      },
+      include: this.prismaQueryHelper.getPostsDataInclude(userId),
+    });
+
+    return post;
+  }
 }
 
 export default PostService;

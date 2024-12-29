@@ -3,6 +3,7 @@ import Navbar from '@/components/Navbar';
 import TrendSidebar from '@/components/Navbar/TrendSidebar';
 import PostEditor from '@/components/Post/Editor/PostEditor';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+export const dynamic = 'force-dynamic';
 
 export default function HomePage() {
   return (

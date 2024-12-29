@@ -28,6 +28,11 @@ export type PostIdParams = Promise<{
 
 export type CreatePostParams = {
   content: string;
-  userId?: string;
+  userId: string;
   mediaIds?: string[];
+};
+
+export type CreateCommentParams = {
+  post: PostData;
+  content: string;
 };

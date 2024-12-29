@@ -39,13 +39,15 @@ const MediaPreview: React.FC<MediaPreviewProps> = (props) => {
   }
 
   if (props.media.type === 'VIDEO') {
-    <div>
-      <video
-        src={props.media.url}
-        controls
-        className="mx-auto size-fit max-h-[30rem] rounded-2xl"
-      />
-    </div>;
+    return (
+      <div>
+        <video
+          src={props.media.url}
+          controls
+          className="mx-auto size-fit max-h-[30rem] rounded-2xl"
+        />
+      </div>
+    );
   }
 
   if (props.media.type === 'AUDIO') {

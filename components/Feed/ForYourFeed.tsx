@@ -6,6 +6,7 @@ import { api } from '@/lib/api';
 import { PostsPage } from '@/types/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
+import PostsLoadingSkeleton from '@/components/Post/PostsLoadingSkeleton';
 
 export default function ForYouFeed() {
   const {
@@ -33,7 +34,7 @@ export default function ForYouFeed() {
   const posts = data?.pages.flatMap((page) => page.data?.posts) ?? [];
 
   if (status === 'pending') {
-    return <div>Loading</div>;
+    return <PostsLoadingSkeleton />;
   }
 
   if (status === 'success' && !posts && !hasNextPage) {

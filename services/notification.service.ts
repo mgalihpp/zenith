@@ -9,12 +9,14 @@ class NotificationService extends Service {
   async createNotification(
     issuerId: string,
     recipientId: string,
-    type: NotificationType
+    type: NotificationType,
+    postId?: string
   ) {
     this.db.notification.create({
       data: {
         issuerId,
         recipientId,
+        postId,
         type,
       },
     });

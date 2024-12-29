@@ -27,7 +27,7 @@ Command.displayName = CommandPrimitive.displayName;
 const CommandDialog = ({ children, ...props }: DialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0 shadow-lg">
+      <DialogContent className="overflow-hidden p-0 shadow-lg top-[5%] translate-y-0 data-[state=closed]:slide-out-to-top-[4%] data-[state=open]:slide-in-from-top-[4%]">
         <VisuallyHidden.Root>
           <DialogTitle className="sr-only">Search</DialogTitle>
         </VisuallyHidden.Root>

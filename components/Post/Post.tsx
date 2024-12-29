@@ -11,6 +11,7 @@ import MediaPreviews from '@/components/Post/MediaPreviews';
 import LikeButton from '@/components/LikeButton';
 import CommentButton from '@/components/CommentButton';
 import BookmarkButton from '@/components/BookmarkButton';
+import Comments from '@/components/Comment/Comments';
 
 type PostProps = { post: PostData };
 
@@ -22,7 +23,7 @@ export default function Post({ post }: PostProps) {
   return (
     <article className="group/post space-y-3 rounded-t-2xl bg-card p-3 sm:p-5 shadow-sm border-b">
       {/* <div className="flex justify-between gap-3"> */}
-      <div className="flex flex-wrap gap-3">
+      <div className="flex gap-3">
         <div>
           <UserTooltip user={post.user}>
             <Link href={`/users/${post.user.username}`}>
@@ -35,7 +36,7 @@ export default function Post({ post }: PostProps) {
         </div>
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex items-center justify-between">
-            <div className="flex max-sm:flex-col sm:items-center gap-1">
+            <div className="flex max-sm:flex-col flex-wrap sm:items-center gap-1">
               <UserTooltip user={post.user}>
                 <Link
                   href={`/users/${post.user.username}`}
@@ -81,7 +82,7 @@ export default function Post({ post }: PostProps) {
               />
               <CommentButton
                 post={post}
-                onClick={() => setShowComments(true)}
+                onClick={() => setShowComments(!showComments)}
               />
             </div>
             <BookmarkButton
@@ -93,6 +94,7 @@ export default function Post({ post }: PostProps) {
               }}
             />
           </div>
+          {showComments && <Comments post={post} />}
         </div>
       </div>
       {/* </div> */}

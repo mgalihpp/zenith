@@ -8,6 +8,23 @@ class CommentService extends Service {
     super();
   }
 
+  async createComment(params: {
+    content: string;
+    userId: string;
+    postId: string;
+  }) {
+    const newComment = await this.db.comment.create({
+      data: {
+        content: params.content,
+        userId: params.userId,
+        postId: params.postId,
+      },
+      include: this.prismaQueryHelper.getCommentDataInclude(params.userId),
+    });
+
+    return newComment;
+  }
+
   async getComments(
     user: GetPostsParams,
     postId: string,
@@ -22,6 +39,28 @@ class CommentService extends Service {
     });
 
     return comments as CommentData[];
+  }
+
+  async getComment(commentId: string, opts?: Prisma.CommentFindUniqueArgs) {
+    const comment = await this.db.comment.findUnique({
+      where: {
+        id: commentId,
+      },
+      ...opts,
+    });
+
+    return comment;
+  }
+
+  async deleteComment(commentId: string, userId: string) {
+    const comment = await this.db.comment.delete({
+      where: {
+        id: commentId,
+      },
+      include: this.prismaQueryHelper.getCommentDataInclude(userId),
+    });
+
+    return comment;
   }
 }
 

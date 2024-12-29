@@ -60,6 +60,7 @@ export default function PostEditor() {
       {
         content: input,
         mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
+        userId: user?.id as string,
       },
       {
         onSuccess: () => {
@@ -79,15 +80,8 @@ export default function PostEditor() {
   }
 
   return (
-    <div
-      className={cn(
-        'hidden sm:flex sm:flex-row gap-5 rounded-2xl bg-card p-5 shadow-sm border',
-        {
-          'flex-col': attachments.length,
-        }
-      )}
-    >
-      <div className="flex gap-5 w-full">
+    <div className="hidden sm:flex sm:flex-col gap-2 rounded-2xl bg-card px-3 shadow-sm border">
+      <div className="flex gap-2 w-full pt-2">
         <UserAvatar avatarUrl={user?.avatarUrl} className="hidden sm:inline" />
         <div {...rootProps} className="w-full">
           <EditorContent
@@ -109,7 +103,7 @@ export default function PostEditor() {
           removeAttachment={removeAttachment}
         />
       )}
-      <div className="flex items-center justify-end gap-3">
+      <div className="flex items-center justify-end gap-3 pb-2">
         {isUploading && (
           <>
             <span className="text-sm">{uploadProgress ?? 0}%</span>
@@ -123,7 +117,7 @@ export default function PostEditor() {
         <LoadingButton
           loading={mutation.isPending}
           disabled={!input.trim() || isUploading}
-          className="min-w-20"
+          className="min-w-20 rounded-full font-bold"
           onClick={onSubmit}
         >
           Post

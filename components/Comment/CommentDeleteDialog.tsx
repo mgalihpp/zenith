@@ -1,4 +1,3 @@
-import { PostData } from '@/types/post';
 import {
   Dialog,
   DialogContent,
@@ -9,25 +8,27 @@ import {
 } from '@/components/ui/dialog';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
-import { useDeletePostMutation } from './mutation';
+import { CommentData } from '@/types/comment';
+import { useDeleteCommentMutation } from './mutation';
 
-type PostDeleteDialogProps = {
-  post: PostData;
+type CommentDeleteDialogProps = {
+  comment: CommentData;
   open: boolean;
   onClose: () => void;
 };
 
-export default function PostDeleteDialog(props: PostDeleteDialogProps) {
+export default function CommentDeleteDialog(props: CommentDeleteDialogProps) {
   // TODO: MAKE API FOR DELETE POST
-  const mutation = useDeletePostMutation();
+  const mutation = useDeleteCommentMutation();
 
   return (
     <Dialog open={props.open} onOpenChange={props.onClose}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Delete post?</DialogTitle>
+          <DialogTitle>Delete Comment?</DialogTitle>
           <DialogDescription>
-            Are you sure want to delete this post? this action cannot be undone.
+            Are you sure want to delete this Comment? this action cannot be
+            undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>
@@ -40,7 +41,7 @@ export default function PostDeleteDialog(props: PostDeleteDialogProps) {
           </Button>
           <LoadingButton
             onClick={() =>
-              mutation.mutate(props.post.id, { onSuccess: props.onClose })
+              mutation.mutate(props.comment.id, { onSuccess: props.onClose })
             }
             loading={mutation.isPending}
           >

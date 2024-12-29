@@ -69,23 +69,26 @@ async function WhoToFollow() {
 const getTrendingTopics = unstable_cache(
   async () => {
     const result = await db.$queryRaw<{ hashtag: string; count: bigint }[]>`
-      SELECT 
-      LOWER(SUBSTRING_INDEX(SUBSTRING_INDEX(content, ' ', numbers.n), ' ', -1)) AS hashtag,
-      COUNT(*) AS count
-      FROM (
-          SELECT content 
-          FROM posts 
-          WHERE content REGEXP '#[[:alnum:]_]+'
-      ) AS filtered_posts
-      JOIN (
-          SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
-          UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
-      ) numbers
-      ON CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(content, ' ', '')) >= numbers.n - 1
-      GROUP BY hashtag
-      ORDER BY count DESC, hashtag ASC
-      LIMIT 5;
-    `;
+  SELECT 
+    LOWER(TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1))) AS hashtag,
+    COUNT(*) AS count
+FROM (
+    SELECT content 
+    FROM posts 
+    WHERE content REGEXP '#[[:alnum:]_]+'
+) AS filtered_posts
+JOIN (
+    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+    UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
+) numbers
+ON CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(REPLACE(content, '\n', ' '), ' ', '')) >= numbers.n - 1
+WHERE 
+    SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1) REGEXP '^#[[:alnum:]_]+'
+GROUP BY hashtag
+ORDER BY count DESC, hashtag ASC
+LIMIT 5;
+
+`;
 
     return result.map((row) => ({
       hashtag: row.hashtag,
@@ -104,11 +107,11 @@ async function TrendingTopics() {
   return (
     <div className="space-y-5 rounded-2xl bg-card p-5 shadow-sm border">
       <div className="text-xl font-bold">Trending topics</div>
-      {topics.map((topic) => {
+      {topics.map((topic, index) => {
         const title = topic.hashtag.split('#')[1];
 
         return (
-          <Link key={title} href={`/hashtag/${title}`} className="block">
+          <Link key={index} href={`/hashtag/${title}`} className="block">
             <p className="line-clamp-1 break-all font-semibold hover:underline">
               {topic.hashtag}
             </p>{' '}
