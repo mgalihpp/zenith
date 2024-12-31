@@ -1,3 +1,4 @@
+import streamServerClient from '@/lib/stream-chat';
 import MediaService from '@/services/media.service';
 import { getSession } from '@/services/session.service';
 import UserService from '@/services/user.service';
@@ -36,7 +37,12 @@ export const fileRouter = {
 
       await Promise.all([
         new UserService().updateUserAvatar(metadata.user.id, newAvatar),
-        // TODO UPDATE STREAMSERVER
+        streamServerClient.partialUpdateUser({
+          id: metadata.user.id,
+          set: {
+            image: newAvatar,
+          },
+        }),
       ]);
 
       return {
