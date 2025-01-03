@@ -12,7 +12,7 @@ class NotificationService extends Service {
     type: NotificationType,
     postId?: string
   ) {
-    this.db.notification.create({
+    await this.db.notification.create({
       data: {
         issuerId,
         recipientId,
@@ -34,6 +34,17 @@ class NotificationService extends Service {
         type,
       },
     });
+  }
+
+  async getNotificationsCount(recipientId: string) {
+    const notificationsCount = await this.db.notification.count({
+      where: {
+        recipientId,
+        read: false,
+      },
+    });
+
+    return notificationsCount;
   }
 }
 
