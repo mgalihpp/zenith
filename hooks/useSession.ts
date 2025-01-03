@@ -1,6 +1,6 @@
 import { SessionContext } from '@/components/SessionProvider';
-import { useContext } from 'react';
+import { use } from 'react';
 
 export function useSession() {
-  return useContext(SessionContext);
+  return use(SessionContext);
 }
