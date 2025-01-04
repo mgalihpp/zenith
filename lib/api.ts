@@ -46,6 +46,19 @@ class ApiRequest {
     return json;
   }
 
+  async patch<T = unknown>(
+    url: string,
+    options: Options = {}
+  ): Promise<ApiRequestResponse<T>> {
+    const json = await this.ky
+      .patch(`${this.getBaseUrl()}${url}`, {
+        ...options,
+      })
+      .json<ApiRequestResponse<T>>();
+
+    return json;
+  }
+
   getBaseUrl() {
     if (typeof window !== 'undefined') return window.location.origin;
     if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;

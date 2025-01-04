@@ -45,3 +45,14 @@ export interface LikeInfo {
 export interface BookmarkInfo {
   isBookmarkedByUser: boolean;
 }
+
+export type NotificationData = Prisma.NotificationGetPayload<{
+  include: ReturnType<
+    typeof PrismaQueryHelper.prototype.getNotificationsInclude
+  >;
+}>;
+
+export interface NotificationsPage {
+  notifications: NotificationData[];
+  nextCursor: string | null;
+}

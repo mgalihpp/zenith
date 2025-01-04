@@ -73,7 +73,12 @@ class PostService extends Service {
     await this.db.$transaction(async () => {
       await Promise.all([
         likeService.createLike(),
-        notificationService.createNotification(user.id, post.userId, 'LIKE'),
+        notificationService.createNotification(
+          user.id,
+          post.userId,
+          'LIKE',
+          post.id
+        ),
       ]);
     });
   }

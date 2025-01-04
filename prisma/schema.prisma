@@ -64,7 +64,7 @@ model Follow {
 
 model Post {
   id      String @id @default(cuid())
-  content String
+  content String @db.Text
   userId  String
 
   user                User           @relation(fields: [userId], references: [id], onDelete: Cascade)

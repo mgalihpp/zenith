@@ -1,5 +1,6 @@
-import { NotificationType } from '@prisma/client';
+import { NotificationType, Prisma } from '@prisma/client';
 import Service from '.';
+import { NotificationData } from '@/types/post';
 
 class NotificationService extends Service {
   constructor() {
@@ -45,6 +46,33 @@ class NotificationService extends Service {
     });
 
     return notificationsCount;
+  }
+
+  async getNotifications(
+    userId: string,
+    opts?: Prisma.NotificationFindManyArgs
+  ) {
+    const notifications = await this.db.notification.findMany({
+      where: {
+        recipientId: userId,
+      },
+      include: this.prismaQueryHelper.getNotificationsInclude(),
+      ...opts,
+    });
+
+    return notifications as NotificationData[];
+  }
+
+  async markAllAsRead(userId: string) {
+    await this.db.notification.updateMany({
+      where: {
+        recipientId: userId,
+        read: false,
+      },
+      data: {
+        read: true,
+      },
+    });
   }
 }
 

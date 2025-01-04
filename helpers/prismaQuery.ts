@@ -74,6 +74,23 @@ class PrismaQueryHelper {
       },
     } satisfies Prisma.CommentInclude;
   }
+
+  getNotificationsInclude() {
+    return {
+      issuer: {
+        select: {
+          username: true,
+          displayName: true,
+          avatarUrl: true,
+        },
+      },
+      post: {
+        select: {
+          content: true,
+        },
+      },
+    } satisfies Prisma.NotificationInclude;
+  }
 }
 
 export default PrismaQueryHelper;
