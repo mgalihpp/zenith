@@ -1,3 +1,5 @@
+'use client';
+
 import { useSession } from '@/hooks/useSession';
 import { PostData } from '@/types/post';
 import { useState } from 'react';
@@ -11,26 +13,32 @@ import MediaPreviews from '@/components/Post/MediaPreviews';
 import LikeButton from '@/components/LikeButton';
 import CommentButton from '@/components/CommentButton';
 import BookmarkButton from '@/components/BookmarkButton';
-import Comments from '@/components/Comment/Comments';
+import { useRouter } from 'next/navigation';
+import CommentInput from '@/components/Comment/CommentInput';
 
 type PostProps = { post: PostData };
 
 export default function Post({ post }: PostProps) {
   const user = useSession();
+  const router = useRouter();
 
   const [showComments, setShowComments] = useState(false);
 
+  const navigateToPost = () => router.push(`/post/${post.id}`);
+
   return (
-    <article className="group/post space-y-3 rounded-t-2xl bg-card p-3 sm:p-5 shadow-sm border-b">
-      {/* <div className="flex justify-between gap-3"> */}
+    <article
+      className="group/post space-y-3 bg-card px-3 py-1.5 shadow-sm cursor-pointer"
+      onClick={navigateToPost}
+    >
       <div className="flex gap-3">
         <div>
           <UserTooltip user={post.user}>
-            <Link href={`/users/${post.user.username}`}>
-              <UserAvatar
-                avatarUrl={post.user.avatarUrl}
-                className="max-sm:size-10"
-              />
+            <Link
+              href={`/users/${post.user.username}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <UserAvatar avatarUrl={post.user.avatarUrl} size={40} />
             </Link>
           </UserTooltip>
         </div>
@@ -41,6 +49,7 @@ export default function Post({ post }: PostProps) {
                 <Link
                   href={`/users/${post.user.username}`}
                   className="block font-medium hover:underline"
+                  onClick={(e) => e.stopPropagation()}
                 >
                   {post.user.displayName}
                 </Link>
@@ -82,7 +91,10 @@ export default function Post({ post }: PostProps) {
               />
               <CommentButton
                 post={post}
-                onClick={() => setShowComments(!showComments)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowComments(!showComments);
+                }}
               />
             </div>
             <BookmarkButton
@@ -94,12 +106,13 @@ export default function Post({ post }: PostProps) {
               }}
             />
           </div>
-          {showComments && <Comments post={post} />}
+          <CommentInput
+            post={post}
+            open={showComments}
+            setOpen={setShowComments}
+          />
         </div>
       </div>
-      {/* </div> */}
-
-      {/* TODO: SHOW COMMENTS */}
     </article>
   );
 }

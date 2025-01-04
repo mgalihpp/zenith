@@ -24,7 +24,12 @@ export default function PostMoreButton(props: PostMoreButtonProps) {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className={props.className} size="icon" variant="ghost">
+          <Button
+            className={props.className}
+            size="icon"
+            variant="ghost"
+            onClick={(e) => e.stopPropagation()}
+          >
             <MoreHorizontal className="size-5 text-muted-foreground" />
           </Button>
         </DropdownMenuTrigger>

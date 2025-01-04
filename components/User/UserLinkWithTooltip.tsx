@@ -45,8 +45,9 @@ export default function UserLinkWithTooltip({
   return (
     <UserTooltip user={data}>
       <Link
+        onClick={(e) => e.stopPropagation()}
         href={`/users/${username}`}
-        className="text-primary hover:underline"
+        className="text-primary hover:underline text-sm"
       >
         {children}
       </Link>

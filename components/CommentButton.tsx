@@ -1,10 +1,11 @@
 import { PostData } from '@/types/post';
 import { MessageSquare } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import React from 'react';
 
 type CommentButtonProps = {
   post: PostData;
-  onClick: () => void;
+  onClick: (e: React.MouseEvent) => void;
 };
 
 export default function CommentButton(props: CommentButtonProps) {

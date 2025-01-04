@@ -2,13 +2,13 @@
 
 import InfiniteScrollWrapper from '@/components/InfiniteScrollWrapper';
 import Post from '@/components/Post/Post';
+import PostsLoadingSkeleton from '@/components/Post/PostsLoadingSkeleton';
 import { api } from '@/lib/api';
 import { PostsPage } from '@/types/post';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { Loader2 } from 'lucide-react';
-import PostsLoadingSkeleton from '@/components/Post/PostsLoadingSkeleton';
 
-export default function ForYouFeed() {
+export default function Bookmarks() {
   const {
     data,
     status,
@@ -17,13 +17,15 @@ export default function ForYouFeed() {
     fetchNextPage,
     isFetchingNextPage,
   } = useInfiniteQuery({
-    queryKey: ['post-feed', 'for-you'],
-    queryFn: ({ pageParam }) =>
+    queryKey: ['post-feed', 'bookmarks'],
+    queryFn: async ({ pageParam }) =>
       api.get<PostsPage>(
-        `/api/posts/for-you`,
+        '/api/posts/bookmarked',
         pageParam
           ? {
-              searchParams: { cursor: pageParam },
+              searchParams: {
+                cursor: pageParam,
+              },
             }
           : {}
       ),
@@ -31,16 +33,16 @@ export default function ForYouFeed() {
     getNextPageParam: (lastPage) => lastPage.data?.nextCursor,
   });
 
-  const posts = data?.pages.flatMap((page) => page.data?.posts) ?? [];
+  const posts = data?.pages.flatMap((page) => page.data.posts) ?? [];
 
   if (status === 'pending') {
     return <PostsLoadingSkeleton />;
   }
 
-  if (status === 'success' && !posts && !hasNextPage) {
+  if (status === 'success' && !posts.length && !hasNextPage) {
     return (
       <p className="text-center text-muted-foreground">
-        No one has posted anything yet.
+        You don&apos;t have any bookmarks yet.
       </p>
     );
   }
@@ -48,19 +50,19 @@ export default function ForYouFeed() {
   if (status === 'error') {
     return (
       <p className="text-center text-destructive">
-        An error occurred while loading posts.
+        An error occurred while loading bookmarks.
       </p>
     );
   }
 
   return (
     <InfiniteScrollWrapper
-      // className="space-y-5"
+      className="space-y-5"
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
-      <div className="divide-y">
+      <div className="divide-y border">
         {posts.map((post) => (
-          <Post post={post} key={post.id} />
+          <Post key={post.id} post={post} />
         ))}
       </div>
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}

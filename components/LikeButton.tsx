@@ -66,7 +66,10 @@ export default function LikeButton(props: LikeButtonProps) {
   return (
     <Button
       className="flex items-center gap-2 relative group text-muted-foreground"
-      onClick={() => mutate()}
+      onClick={(e) => {
+        e.stopPropagation();
+        mutate();
+      }}
       disabled={isPending || isFetching}
       variant="ghost"
       size="icon"

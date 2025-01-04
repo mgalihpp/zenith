@@ -3,7 +3,6 @@ import { Loader2 } from 'lucide-react';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { api } from '@/lib/api';
 import { CommentPage } from '@/types/comment';
-import CommentInput from './CommentInput';
 import Comment from './Comment';
 
 type CommentsProps = {
@@ -20,7 +19,7 @@ export default function Comments(props: CommentsProps) {
           pageParam
             ? {
                 searchParams: {
-                  cusor: pageParam,
+                  cursor: pageParam,
                 },
               }
             : {}
@@ -36,8 +35,10 @@ export default function Comments(props: CommentsProps) {
   const comments = data?.pages.flatMap((page) => page.data.comments) ?? [];
 
   return (
-    <div className="space-y-3 border-t pt-2">
-      <CommentInput post={props.post} />
+    <div
+      className="space-y-3 border-t pt-2"
+      onClick={(e) => e.stopPropagation()}
+    >
       {status === 'pending' && <Loader2 className="mx-auto animate-spin" />}
       {status === 'success' && !comments.length && (
         <p className="text-center text-muted-foreground">No comments yet.</p>

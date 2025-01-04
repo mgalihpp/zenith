@@ -8,7 +8,7 @@ export const dynamic = 'force-dynamic';
 export default function HomePage() {
   return (
     <div className="flex w-full min-w-0 gap-5">
-      <div className="w-full min-w-0 space-y-5">
+      <div className="w-full min-w-0 space-y-2">
         <Navbar />
         <PostEditor />
         <Tabs defaultValue="for you">

@@ -67,7 +67,10 @@ export default function BookmarkButton(props: BookmarkButtonProps) {
   return (
     <Button
       className="flex items-center gap-2 relative group text-muted-foreground"
-      onClick={() => mutate()}
+      onClick={(e) => {
+        e.stopPropagation();
+        mutate();
+      }}
       disabled={isFetching || isPending}
       variant="ghost"
       size="icon"

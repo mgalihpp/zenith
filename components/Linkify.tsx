@@ -18,7 +18,9 @@ export default function Linkify({ children }: LinkifyProps) {
 
 function LinkifyUrl({ children }: LinkifyProps) {
   return (
-    <LinkItUrl className="text-link hover:underline">{children}</LinkItUrl>
+    <LinkItUrl className="text-link hover:underline line-clamp-1 max-sm:w-48">
+      {children}
+    </LinkItUrl>
   );
 }
 
@@ -45,6 +47,7 @@ function LinkifyHashtag({ children }: LinkifyProps) {
         <Link
           key={key}
           href={`/hashtag/${match.slice(1)}`}
+          onClick={(e) => e.stopPropagation()}
           className="text-link hover:underline"
         >
           {match}
