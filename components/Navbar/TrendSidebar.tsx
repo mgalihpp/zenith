@@ -26,7 +26,7 @@ async function WhoToFollow() {
         },
       },
     },
-    select: PrismaQueryHelper.prototype.getUserDataSelect(user.id),
+    select: new PrismaQueryHelper().getUserDataSelect(user.id),
     take: 5,
   });
 
@@ -37,7 +37,7 @@ async function WhoToFollow() {
         <div key={user.id} className="flex items-center justify-between gap-2">
           <UserTooltip user={user}>
             <Link
-              href={`/users/${user.username}`}
+              href={`/user/${user.username}`}
               className="flex items-center gap-3"
             >
               <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" />

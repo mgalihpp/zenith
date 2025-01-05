@@ -1,10 +1,9 @@
 import { useRouter } from 'next/navigation';
-import { File, Laptop, Moon, SearchIcon, Sun } from 'lucide-react';
-import { FormEvent, useEffect, useState } from 'react';
+import { Laptop, Moon, SearchIcon, Sun } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils';
 import {
   CommandDialog,
-  CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
@@ -16,32 +15,20 @@ type Props = {
   className?: string;
 };
 
-const searchData = [
-  { title: 'Introduction', href: '/docs/introduction' },
-  { title: 'Getting Started', href: '/docs/getting-started' },
-  { title: 'Components', href: '/docs/components' },
-  { title: 'Theming', href: '/docs/theming' },
-  { title: 'CLI', href: '/docs/cli' },
-];
+// const searchData = [
+//   { title: 'Introduction', href: '/docs/introduction' },
+//   { title: 'Getting Started', href: '/docs/getting-started' },
+//   { title: 'Components', href: '/docs/components' },
+//   { title: 'Theming', href: '/docs/theming' },
+//   { title: 'CLI', href: '/docs/cli' },
+// ];
 
 export default function SearchBar(props: Props) {
   const [open, setOpen] = useState(false);
+  const [input, setInput] = useState('');
 
   const router = useRouter();
   const { setTheme } = useTheme();
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const form = e.currentTarget;
-    const formData = form.q as HTMLInputElement;
-
-    const query = formData.value.trim();
-
-    if (!query) return;
-
-    router.push(`/search?q=${encodeURIComponent(query)}`);
-  };
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -66,22 +53,20 @@ export default function SearchBar(props: Props) {
         <SearchIcon className="mr-2 h-4 w-4 shrink-0 opacity-50" />
       </button>
       <CommandDialog open={open} onOpenChange={setOpen}>
-        <CommandInput placeholder="Type a command or search..." />
+        <CommandInput
+          placeholder="Type to search..."
+          value={input}
+          onValueChange={setInput}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              runCommand(() =>
+                router.push(`/search?q=${decodeURIComponent(input)}`)
+              );
+            }
+          }}
+        />
         <CommandList>
-          <CommandEmpty>No results found.</CommandEmpty>
-          <CommandGroup heading="Links">
-            {searchData.map((item) => (
-              <CommandItem
-                key={item.href}
-                onSelect={() => {
-                  runCommand(() => router.push(item.href));
-                }}
-              >
-                <File className="mr-2 h-4 w-4" />
-                {item.title}
-              </CommandItem>
-            ))}
-          </CommandGroup>
           <CommandGroup heading="Theme">
             <CommandItem onSelect={() => runCommand(() => setTheme('light'))}>
               <Sun className="mr-2 h-4 w-4" />
