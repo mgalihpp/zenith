@@ -10,22 +10,19 @@ class UserService extends Service {
     super();
   }
 
-  async updateUserAvatar(userId: string, avatarUrl: string) {
+  async updateUserAvatar(userId: string, avatarUrl: string): Promise<void> {
     await this.db.user.update({
-      where: {
-        id: userId,
-      },
-      data: {
-        avatarUrl,
-      },
+      where: { id: userId },
+      data: { avatarUrl },
     });
   }
 
-  async updateUser(userId: string, data: UpdateUserProfileValues) {
+  async updateUser(
+    userId: string,
+    data: UpdateUserProfileValues
+  ): Promise<UserData> {
     const updatedUser = await this.db.user.update({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
       data,
       select: this.prismaQueryHelper.getUserDataSelect(userId),
     });
@@ -38,11 +35,7 @@ class UserService extends Service {
     opts?: Prisma.UserFindManyArgs
   ) {
     const user = await this.db.user.findFirst({
-      where: {
-        username: {
-          equals: username,
-        },
-      },
+      where: { username: { equals: username } },
       ...opts,
     });
 
@@ -51,23 +44,10 @@ class UserService extends Service {
 
   async getUserFollowersCount(userId: User['id'], followerId: User['id']) {
     const user = await this.db.user.findUnique({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
       select: {
-        followers: {
-          where: {
-            followerId,
-          },
-          select: {
-            followerId: true,
-          },
-        },
-        _count: {
-          select: {
-            followers: true,
-          },
-        },
+        followers: { where: { followerId }, select: { followerId: true } },
+        _count: { select: { followers: true } },
       },
     });
 
@@ -77,31 +57,48 @@ class UserService extends Service {
   async followUserAndSendNotification(
     followerId: User['id'],
     followingId: User['id']
-  ) {
-    const followService = new FollowService(followerId, followingId);
-    const noficationService = new NotificationService();
-
-    await this.db.$transaction(async () => {
-      await Promise.all([
-        followService.createFollow(),
-        noficationService.createNotification(followerId, followingId, 'FOLLOW'),
-      ]);
-    });
+  ): Promise<void> {
+    await this.handleFollowAndNotification(followerId, followingId, true);
   }
 
   async unfollowUserAndCancelNotification(
     followerId: User['id'],
     followingId: User['id']
-  ) {
-    const followService = new FollowService(followerId, followingId);
-    const noficationService = new NotificationService();
+  ): Promise<void> {
+    await this.handleFollowAndNotification(followerId, followingId, false);
+  }
 
-    await this.db.$transaction(async () => {
-      await Promise.all([
-        followService.deleteFollow(),
-        noficationService.deleteNotification(followerId, followingId, 'FOLLOW'),
-      ]);
-    });
+  private async handleFollowAndNotification(
+    followerId: User['id'],
+    followingId: User['id'],
+    isFollow: boolean
+  ): Promise<void> {
+    const followService = new FollowService(followerId, followingId);
+    const notificationService = new NotificationService();
+    const followAction = isFollow
+      ? followService.createFollow()
+      : followService.deleteFollow();
+    const notificationAction = isFollow
+      ? notificationService.createNotification(
+          followerId,
+          followingId,
+          'FOLLOW'
+        )
+      : notificationService.deleteNotification(
+          followerId,
+          followingId,
+          'FOLLOW'
+        );
+
+    try {
+      await this.db.$transaction(async () => {
+        await Promise.all([followAction, notificationAction]);
+      });
+    } catch (error) {
+      console.error('Transaction failed: ', error);
+      throw error;
+    }
   }
 }
+
 export default UserService;
