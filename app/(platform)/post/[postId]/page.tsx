@@ -26,7 +26,7 @@ const getPost = cache(async (postId: string, loggedInUserId: string) => {
     where: {
       id: postId,
     },
-    include: PrismaQueryHelper.prototype.getPostsDataInclude(loggedInUserId),
+    include: new PrismaQueryHelper().getPostsDataInclude(loggedInUserId),
   });
 
   if (!post) return notFound();
@@ -90,7 +90,7 @@ async function UserInfoSidebar({ user }: UserInfoSidebarProps) {
       <div className="text-xl font-bold">About this user</div>
       <UserTooltip user={user}>
         <Link
-          href={`/users/${user.username}`}
+          href={`/user/${user.username}`}
           className="flex items-center gap-3"
         >
           <UserAvatar avatarUrl={user.avatarUrl} className="flex-none" />

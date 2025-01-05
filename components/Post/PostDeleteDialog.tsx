@@ -33,15 +33,19 @@ export default function PostDeleteDialog(props: PostDeleteDialogProps) {
         <DialogFooter>
           <Button
             variant="outline"
-            onClick={props.onClose}
+            onClick={(e) => {
+              e.stopPropagation();
+              props.onClose();
+            }}
             disabled={mutation.isPending}
           >
             Cancel
           </Button>
           <LoadingButton
-            onClick={() =>
-              mutation.mutate(props.post.id, { onSuccess: props.onClose })
-            }
+            onClick={(e) => {
+              e.stopPropagation();
+              mutation.mutate(props.post.id, { onSuccess: props.onClose });
+            }}
             loading={mutation.isPending}
           >
             Delete

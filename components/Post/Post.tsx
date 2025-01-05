@@ -35,7 +35,7 @@ export default function Post({ post }: PostProps) {
         <div>
           <UserTooltip user={post.user}>
             <Link
-              href={`/users/${post.user.username}`}
+              href={`/user/${post.user.username}`}
               onClick={(e) => e.stopPropagation()}
             >
               <UserAvatar avatarUrl={post.user.avatarUrl} size={40} />
@@ -47,7 +47,7 @@ export default function Post({ post }: PostProps) {
             <div className="flex max-sm:flex-col flex-wrap sm:items-center gap-1">
               <UserTooltip user={post.user}>
                 <Link
-                  href={`/users/${post.user.username}`}
+                  href={`/user/${post.user.username}`}
                   className="block font-medium hover:underline"
                   onClick={(e) => e.stopPropagation()}
                 >

@@ -23,14 +23,14 @@ export default function BookmarkButton(props: BookmarkButtonProps) {
 
   const queryKey: QueryKey = ['bookmark-info', props.postId];
 
-  const { data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey,
     queryFn: () =>
       api
         .get<BookmarkInfo>(`/api/posts/${props.postId}/bookmark`)
         .then((json) => json.data),
     initialData: props.initialState,
-    staleTime: Infinity,
+    staleTime: 10,
   });
 
   const { mutate, isPending } = useMutation({
@@ -71,13 +71,13 @@ export default function BookmarkButton(props: BookmarkButtonProps) {
         e.stopPropagation();
         mutate();
       }}
-      disabled={isFetching || isPending}
+      disabled={isPending}
       variant="ghost"
       size="icon"
     >
       <Bookmark
         className={cn('size-5 group-hover:text-blue-600', {
-          'text-blue-600 fill-blue-600': data.isBookmarkedByUser,
+          'text-blue-600 fill-blue-600': data?.isBookmarkedByUser,
         })}
       />
     </Button>

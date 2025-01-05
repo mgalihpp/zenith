@@ -7,6 +7,7 @@ import { PostData } from '@/types/post';
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
@@ -48,10 +49,11 @@ export default function CommentInput(props: CommentInputProps) {
   }
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
-      <DialogHeader>
-        <DialogTitle></DialogTitle>
-      </DialogHeader>
       <DialogContent>
+        <DialogHeader>
+          <DialogTitle></DialogTitle>
+          <DialogDescription></DialogDescription>
+        </DialogHeader>
         <div>
           <div className="w-full min-w-0 space-y-5">
             <div className="flex gap-3">
@@ -123,7 +125,7 @@ export default function CommentInput(props: CommentInputProps) {
                 <div>
                   <LoadingButton
                     type="button"
-                    className="rounded-2xl font-bold"
+                    className="rounded-full font-bold"
                     loading={mutation.isPending}
                     disabled={!input.trim()}
                     onClick={(e) => {

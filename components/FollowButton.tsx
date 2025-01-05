@@ -53,10 +53,11 @@ export default function FollowButton(props: FollowButtonProps) {
   return (
     <LoadingButton
       loading={isPending || isFetching}
-      variant={data.isFollowedByUser ? 'secondary' : 'default'}
+      variant={data?.isFollowedByUser ? 'secondary' : 'default'}
       onClick={() => mutate()}
+      className="font-bold rounded-full"
     >
-      {data.isFollowedByUser ? 'Unfollow' : 'Follow'}
+      {data?.isFollowedByUser ? 'Unfollow' : 'Follow'}
     </LoadingButton>
   );
 }

@@ -61,7 +61,7 @@ export default function SinglePost({ post }: PostProps) {
           <div className="flex gap-2">
             <UserTooltip user={post.user}>
               <Link
-                href={`/users/${post.user.username}`}
+                href={`/user/${post.user.username}`}
                 onClick={(e) => e.stopPropagation()}
               >
                 <UserAvatar avatarUrl={post.user.avatarUrl} size={40} />
@@ -70,7 +70,7 @@ export default function SinglePost({ post }: PostProps) {
             <div className="flex flex-col flex-wrap gap-1">
               <UserTooltip user={post.user}>
                 <Link
-                  href={`/users/${post.user.username}`}
+                  href={`/user/${post.user.username}`}
                   className="block font-medium hover:underline"
                   onClick={(e) => e.stopPropagation()}
                 >
@@ -169,7 +169,11 @@ export default function SinglePost({ post }: PostProps) {
                     e.stopPropagation();
                     setIsReplying(true);
                   }}
-                  onBlur={() => setIsReplying(false)}
+                  onBlur={() => {
+                    if (input.trim()) return;
+
+                    setIsReplying(false);
+                  }}
                 />
               </div>
             </div>

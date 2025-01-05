@@ -34,7 +34,12 @@ export default function PostMoreButton(props: PostMoreButtonProps) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem onClick={() => setShowDeleteDialog(true)}>
+          <DropdownMenuItem
+            onClick={(e) => {
+              e.stopPropagation();
+              setShowDeleteDialog(true);
+            }}
+          >
             <span className="flex items-center gap-3">
               <Trash2 className="size-4" />
               Delete

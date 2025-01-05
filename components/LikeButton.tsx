@@ -25,14 +25,14 @@ export default function LikeButton(props: LikeButtonProps) {
 
   const queryKey: QueryKey = ['like-info', props.postId];
 
-  const { data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey,
     queryFn: () =>
       api
         .get<LikeInfo>(`/api/posts/${props.postId}/likes`)
         .then((json) => json.data),
     initialData: props.initialState,
-    staleTime: Infinity,
+    staleTime: 10,
   });
 
   const { mutate, isPending } = useMutation({
@@ -70,24 +70,24 @@ export default function LikeButton(props: LikeButtonProps) {
         e.stopPropagation();
         mutate();
       }}
-      disabled={isPending || isFetching}
+      disabled={isPending}
       variant="ghost"
       size="icon"
     >
       <Heart
         className={cn('size-5 group-hover:text-pink-500', {
-          'fill-pink-500 text-pink-500': data.isLikedByUser,
+          'fill-pink-500 text-pink-500': data?.isLikedByUser,
         })}
       />
       <span
         className={cn(
           'absolute left-full top-1/2 transform -translate-y-1/2 text-xs font-medium tabular-nums group-hover:text-pink-500 transition-colors',
           {
-            'text-pink-500': data.isLikedByUser,
+            'text-pink-500': data?.isLikedByUser,
           }
         )}
       >
-        {data.likes}
+        {data?.likes}
       </span>
     </Button>
   );
