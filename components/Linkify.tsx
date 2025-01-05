@@ -18,7 +18,7 @@ export default function Linkify({ children }: LinkifyProps) {
 
 function LinkifyUrl({ children }: LinkifyProps) {
   return (
-    <LinkItUrl className="text-link hover:underline line-clamp-1 max-sm:w-48">
+    <LinkItUrl className="text-link hover:underline line-clamp-1 max-sm:w-48 md:w-40 lg:w-52">
       {children}
     </LinkItUrl>
   );

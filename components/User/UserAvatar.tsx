@@ -19,6 +19,7 @@ export default function UserAvatar({
       alt="User avatar"
       width={size ?? 48}
       height={size ?? 48}
+      priority
       className={cn(
         'aspect-square h-fit flex-none rounded-full bg-secondary object-cover',
         className
