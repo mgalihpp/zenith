@@ -7,6 +7,7 @@ import { SignUpAction } from '@/types/auth';
 import { hash } from '@node-rs/argon2';
 import { isRedirectError } from 'next/dist/client/components/redirect-error';
 import { redirect } from 'next/navigation';
+import streamServerClient from '@/lib/stream-chat';
 
 export const signup: SignUpAction = async (params) => {
   try {
@@ -47,14 +48,24 @@ export const signup: SignUpAction = async (params) => {
       };
     }
 
-    const user = await db.user.create({
-      data: {
-        username,
-        email,
-        displayName: username,
-        passwordHash,
-      },
-    });
+    const user = await db.user
+      .create({
+        data: {
+          username,
+          email,
+          displayName: username,
+          passwordHash,
+        },
+      })
+      .then(async (data) => {
+        await streamServerClient.upsertUser({
+          id: data.id,
+          username: data.username,
+          name: data.username,
+        });
+
+        return data;
+      });
 
     const session = new SessionService();
 

@@ -3,19 +3,15 @@
 import { Session, SessionPayload, ValidateSession } from '@/types/auth';
 import { jwtVerify, SignJWT } from 'jose';
 import { cookies } from 'next/headers';
-import { db } from '@/lib/prisma';
 import { cache } from 'react';
-import { PrismaClient } from '@prisma/client';
-import PrismaQueryHelper from '@/helpers/prismaQuery';
+import Service from '.';
 
 const secretKey = '2';
 const encodedKey = new TextEncoder().encode(secretKey);
 
-class SessionService {
-  private db: PrismaClient;
-
+class SessionService extends Service {
   constructor() {
-    this.db = db;
+    super();
   }
 
   async createSession(userId: string) {
@@ -57,19 +53,17 @@ class SessionService {
       });
       return payload as Session;
     } catch (error) {
-      console.log('Failed to verify session ', error);
+      console.error('Failed to verify session ', error);
     }
   }
 
   async getUser(userId: string) {
     try {
-      const prismaQueryHelper = new PrismaQueryHelper();
-
       const user = await this.db.user.findFirst({
         where: {
           id: userId,
         },
-        ...prismaQueryHelper.getDefaultUser(),
+        ...this.prismaQueryHelper.getDefaultUser(),
       });
 
       return user;

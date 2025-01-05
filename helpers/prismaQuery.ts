@@ -43,7 +43,7 @@ class PrismaQueryHelper {
       updatedAt: true,
       followers: {
         where: {
-          followingId: loggedInUserId,
+          followerId: loggedInUserId,
         },
         select: {
           followerId: true,
@@ -65,6 +65,31 @@ class PrismaQueryHelper {
         googleId: true,
       },
     } satisfies Prisma.UserFindFirstArgs;
+  }
+
+  getCommentDataInclude(loggedInUserId: string) {
+    return {
+      user: {
+        select: this.getUserDataSelect(loggedInUserId),
+      },
+    } satisfies Prisma.CommentInclude;
+  }
+
+  getNotificationsInclude() {
+    return {
+      issuer: {
+        select: {
+          username: true,
+          displayName: true,
+          avatarUrl: true,
+        },
+      },
+      post: {
+        select: {
+          content: true,
+        },
+      },
+    } satisfies Prisma.NotificationInclude;
   }
 }
 

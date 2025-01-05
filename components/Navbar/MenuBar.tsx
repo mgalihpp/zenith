@@ -1,20 +1,26 @@
-'use client';
-
-import { useSession } from '@/components/SessionProvider';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Bookmark, Home } from 'lucide-react';
+import NotificationsButton from './NotificationsButton';
+import NotificationService from '@/services/notification.service';
+import { getSession } from '@/services/session.service';
+import MessagesButton from './MessagesButton';
+import streamServerClient from '@/lib/stream-chat';
 
 type MenuBarProps = {
   className?: string;
 };
 
-export default function MenuBar({ className }: MenuBarProps) {
-  const user = useSession();
+export default async function MenuBar({ className }: MenuBarProps) {
+  const { user } = await getSession();
 
   if (!user) return null;
 
   // TODO: NOTIFICATION
+  const [unreadNotificationsCount] = await Promise.all([
+    new NotificationService().getNotificationsCount(user.id),
+    (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
+  ]);
 
   // TODO: NOTIFICATION
 
@@ -30,6 +36,10 @@ export default function MenuBar({ className }: MenuBarProps) {
           <Home /> <span className="hidden lg:inline">Home</span>
         </Link>
       </Button>
+      <NotificationsButton
+        initialState={{ unreadCount: unreadNotificationsCount }}
+      />
+      <MessagesButton initialState={{ unreadCount: 0 }} />
       <Button
         variant="ghost"
         className="flex items-center justify-start gap-3"

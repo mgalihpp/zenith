@@ -7,12 +7,51 @@ class ApiRequest {
     this.ky = ky.create(opts);
   }
 
-  async get<T>(
+  async get<T = unknown>(
     url: string,
     options: Options = {}
   ): Promise<ApiRequestResponse<T>> {
     const json = await this.ky
       .get(`${this.getBaseUrl()}${url}`, {
+        ...options,
+      })
+      .json<ApiRequestResponse<T>>();
+
+    return json;
+  }
+
+  async post<T = unknown>(
+    url: string,
+    options: Options = {}
+  ): Promise<ApiRequestResponse<T>> {
+    const json = await this.ky
+      .post(`${this.getBaseUrl()}${url}`, {
+        ...options,
+      })
+      .json<ApiRequestResponse<T>>();
+
+    return json;
+  }
+
+  async delete(
+    url: string,
+    options: Options = {}
+  ): Promise<ApiRequestResponse<unknown>> {
+    const json = await this.ky
+      .delete(`${this.getBaseUrl()}${url}`, {
+        ...options,
+      })
+      .json<ApiRequestResponse<unknown>>();
+
+    return json;
+  }
+
+  async patch<T = unknown>(
+    url: string,
+    options: Options = {}
+  ): Promise<ApiRequestResponse<T>> {
+    const json = await this.ky
+      .patch(`${this.getBaseUrl()}${url}`, {
         ...options,
       })
       .json<ApiRequestResponse<T>>();
