@@ -21,7 +21,7 @@ export async function GET(
     }
 
     const user = await new UserService().getUsersByUsername(username, {
-      select: PrismaQueryHelper.prototype.getUserDataSelect(loggedInUser.id),
+      select: new PrismaQueryHelper().getUserDataSelect(loggedInUser.id),
     });
 
     if (!user) {

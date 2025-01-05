@@ -53,7 +53,7 @@ class SessionService extends Service {
       });
       return payload as Session;
     } catch (error) {
-      console.log('Failed to verify session ', error);
+      console.error('Failed to verify session ', error);
     }
   }
 

@@ -2,6 +2,8 @@ import { Prisma, User } from '@prisma/client';
 import Service from '.';
 import FollowService from './follow.service';
 import NotificationService from './notification.service';
+import { UpdateUserProfileValues } from '@/lib/validation';
+import { UserData } from '@/types/user';
 
 class UserService extends Service {
   constructor() {
@@ -17,6 +19,18 @@ class UserService extends Service {
         avatarUrl,
       },
     });
+  }
+
+  async updateUser(userId: string, data: UpdateUserProfileValues) {
+    const updatedUser = await this.db.user.update({
+      where: {
+        id: userId,
+      },
+      data,
+      select: this.prismaQueryHelper.getUserDataSelect(userId),
+    });
+
+    return updatedUser as unknown as UserData;
   }
 
   async getUsersByUsername(

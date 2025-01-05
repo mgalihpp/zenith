@@ -39,7 +39,7 @@ export async function GET(
 
     return sendResponse({ data });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return sendResponse({
       message: 'Internal server error',
       status: false,
