@@ -52,9 +52,6 @@ export function useUpdateUserProfileMutation() {
       >(queryFilter, (oldData) => {
         const firstPage = oldData?.pages[0];
 
-        console.log(oldData);
-        console.log(firstPage);
-
         if (firstPage) {
           return {
             pageParams: oldData.pageParams,
