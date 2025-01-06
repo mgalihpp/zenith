@@ -23,23 +23,21 @@ export default function UserPosts(props: UserPostsProps) {
   } = useInfiniteQuery({
     queryKey: ['post-feed', 'user-posts', props.userId],
     queryFn: ({ pageParam }) =>
-      api
-        .get<PostsPage>(
-          `/api/users/${props.userId}/posts`,
-          pageParam
-            ? {
-                searchParams: {
-                  cursor: pageParam,
-                },
-              }
-            : {}
-        )
-        .then((json) => json.data),
+      api.get<PostsPage>(
+        `/api/users/${props.userId}/posts`,
+        pageParam
+          ? {
+              searchParams: {
+                cursor: pageParam,
+              },
+            }
+          : {}
+      ),
     initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor,
+    getNextPageParam: (lastPage) => lastPage.data?.nextCursor,
   });
 
-  const posts = data?.pages.flatMap((page) => page.posts) ?? [];
+  const posts = data?.pages.flatMap((page) => page.data.posts) ?? [];
 
   if (status === 'pending') {
     return <PostsLoadingSkeleton />;
