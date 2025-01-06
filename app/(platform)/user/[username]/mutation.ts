@@ -28,7 +28,7 @@ export function useUpdateUserProfileMutation() {
 
   const mutation = useMutation({
     mutationFn: async (data: Payload) => {
-      return Promise.all([
+      return await Promise.all([
         UpdateUser(data.data),
         data.avatar && startProfileImageUpload([data.avatar]),
       ]);
@@ -51,6 +51,9 @@ export function useUpdateUserProfileMutation() {
         InfiniteData<ApiRequestResponse<PostsPage>, string | null>
       >(queryFilter, (oldData) => {
         const firstPage = oldData?.pages[0];
+
+        console.log(oldData);
+        console.log(firstPage);
 
         if (firstPage) {
           return {
