@@ -28,7 +28,7 @@ export function useUpdateUserProfileMutation() {
 
   const mutation = useMutation({
     mutationFn: async (data: Payload) => {
-      return Promise.all([
+      return await Promise.all([
         UpdateUser(data.data),
         data.avatar && startProfileImageUpload([data.avatar]),
       ]);

@@ -5,7 +5,7 @@ import SearchBar from '@/components/Navbar/SearchBar';
 import UserAvatar from '@/components/User/UserAvatar';
 import { useSession } from '@/hooks/useSession';
 import { usePathname, useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
@@ -17,6 +17,9 @@ export default function Navbar({ title = 'Zenith' }: NavbarProps) {
   const user = useSession();
   const router = useRouter();
   const pathname = usePathname();
+
+  const [showNavbar, setShowNavbar] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const historyStack = useRef<string[]>([]);
 
@@ -40,8 +43,30 @@ export default function Navbar({ title = 'Zenith' }: NavbarProps) {
     }
   };
 
+  const handleScroll = useCallback(() => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY) {
+      setShowNavbar(false);
+    } else {
+      setShowNavbar(true);
+    }
+    setLastScrollY(currentScrollY);
+  }, [lastScrollY]);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, [lastScrollY, handleScroll]);
+
   return (
-    <header className="sm:sticky top-0 z-10 bg-card shadow-sm">
+    <header
+      className={`sticky top-0 z-10 bg-card shadow-sm transition-transform duration-300 ${
+        showNavbar ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
       <div className="mx-auto flex items-center justify-between gap-5 px-5 py-3">
         {shouldShowBackButton() ? (
           <Button onClick={handleBackClick} variant="ghost" size="icon">

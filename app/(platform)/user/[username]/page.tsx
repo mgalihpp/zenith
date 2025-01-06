@@ -57,7 +57,7 @@ export default async function UserPage({ params }: PageProps) {
     <div className="flex w-full min-w-0 gap-5">
       <div className="w-full min-w-0 space-y-2">
         <Navbar />
-        <div className="border p-1 rounded-2xl">
+        <div className="border p-1 sm:rounded-2xl">
           <div className="border-b pb-4 mb-2">
             <UserProfile user={user} loggedInUserId={loggedInUser.id} />
           </div>

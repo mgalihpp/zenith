@@ -84,7 +84,7 @@ export default function Notifications() {
       className="space-y-5"
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
-      <div className="divide-y border rounded-2xl">
+      <div className="divide-y border sm:rounded-2xl">
         {notifications.map((notification) => (
           <Notification key={notification.id} notification={notification} />
         ))}

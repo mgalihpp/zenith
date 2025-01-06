@@ -10,6 +10,8 @@ import {
   CommandList,
 } from '@/components/ui/command';
 import { useTheme } from 'next-themes';
+import useDebounce from '@/hooks/useDebounce';
+import { useBreakpoints } from '@/hooks/useMediaQuery';
 
 type Props = {
   className?: string;
@@ -27,6 +29,9 @@ export default function SearchBar(props: Props) {
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
 
+  const debouncedInput = useDebounce(input, 200);
+  const { isXs: isMobile } = useBreakpoints();
+
   const router = useRouter();
   const { setTheme } = useTheme();
 
@@ -41,6 +46,13 @@ export default function SearchBar(props: Props) {
     document.addEventListener('keydown', down);
     return () => document.removeEventListener('keydown', down);
   }, []);
+
+  // auto submit for mobile phone
+  useEffect(() => {
+    if (isMobile && debouncedInput) {
+      router.push(`/search?q=${debouncedInput}`);
+    }
+  }, [isMobile, debouncedInput, router]);
 
   const runCommand = (command: () => void) => {
     setOpen(false);
