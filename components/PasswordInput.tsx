@@ -16,6 +16,7 @@ const PasswordInput = React.forwardRef<
         className={cn('pe-10', className)}
         ref={ref}
         {...props}
+        autoComplete="current-password"
       />
       <button
         type="button"
