@@ -13,7 +13,6 @@ import MediaPreviews from '@/components/Post/MediaPreviews';
 import LikeButton from '@/components/LikeButton';
 import CommentButton from '@/components/CommentButton';
 import BookmarkButton from '@/components/BookmarkButton';
-import { useRouter } from 'next/navigation';
 import CommentInput from '@/components/Comment/CommentInput';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
@@ -26,14 +25,11 @@ type PostProps = { post: PostData };
 
 export default function SinglePost({ post }: PostProps) {
   const user = useSession();
-  const router = useRouter();
 
   const [showComments, setShowComments] = useState(false);
   const [isReplying, setIsReplying] = useState(false);
 
   const [input, setInput] = useState('');
-
-  const navigateToPost = () => router.push(`/post/${post.id}`);
 
   const mutation = useSubmitCommentMutation();
 
@@ -53,10 +49,7 @@ export default function SinglePost({ post }: PostProps) {
 
   return (
     <>
-      <article
-        className="group/post space-y-3 bg-card px-3 py-1.5 shadow-sm cursor-pointer"
-        onClick={navigateToPost}
-      >
+      <article className="group/post space-y-3 bg-card px-3 py-1.5 shadow-sm cursor-pointer">
         <div className="flex items-center justify-between">
           <div className="flex gap-2">
             <UserTooltip user={post.user}>
