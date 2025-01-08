@@ -45,18 +45,17 @@ export default function Notification({ notification }: NotificationProps) {
         )}
       >
         <div className="mx-1">{icon}</div>
-        <div className="space-y-3">
+        <div className="space-y-3 overflow-hidden">
           <UserAvatar avatarUrl={notification.issuer.avatarUrl} size={36} />
           <div>
-            <span className="font-bold">
-              {notification.issuer.displayName}{' '}
+            <span className="font-bold min-w-0 flex-1">
               <span className="text-sm">{message}</span>
             </span>
           </div>
           {notification.post && (
-            <div className="line-clamp-3 whitespace-pre-line text-muted-foreground">
+            <p className="whitespace-pre-line line-clamp-3 text-muted-foreground break-words text-sm">
               {notification.post.content}
-            </div>
+            </p>
           )}
         </div>
       </article>
