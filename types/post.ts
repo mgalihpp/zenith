@@ -35,6 +35,7 @@ export type CreatePostParams = {
 export type CreateCommentParams = {
   post: PostData;
   content: string;
+  mediaIds?: string[];
 };
 
 export interface LikeInfo {

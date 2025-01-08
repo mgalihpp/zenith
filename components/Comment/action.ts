@@ -22,6 +22,7 @@ export async function SubmitComment(input: CreateCommentParams) {
         content,
         userId: user.id,
         postId: input.post.id,
+        mediaIds: input.mediaIds,
       }),
       ...(input.post.user.id !== user.id
         ? [

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import UserAvatar from '@/components/User/UserAvatar';
 import { formatRelativeDate } from '@/lib/utils';
 import CommentMoreButton from './CommentMoreButton';
+import MediaPreviews from '@/components/Post/MediaPreviews';
 
 type CommentProps = {
   comment: CommentData;
@@ -22,7 +23,7 @@ export default function Comment(props: CommentProps) {
           </Link>
         </UserTooltip>
       </div>
-      <div>
+      <div className="flex flex-col flex-1">
         <div className="flex items-center gap-1 text-sm">
           <UserTooltip user={props.comment.user}>
             <Link
@@ -39,6 +40,11 @@ export default function Comment(props: CommentProps) {
         <p className="whitespace-pre-line break-words text-sm">
           {props.comment.content}
         </p>
+        <div className="mt-2">
+          {!!props.comment.attachments.length && (
+            <MediaPreviews attachments={props.comment.attachments} />
+          )}
+        </div>
       </div>
       {props.comment.user.id === user?.id && (
         <CommentMoreButton
