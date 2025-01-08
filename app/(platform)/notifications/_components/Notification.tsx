@@ -38,25 +38,24 @@ export default function Notification({ notification }: NotificationProps) {
     <Link href={href} className="block">
       <article
         className={cn(
-          'flex gap-3 rounded-2xl bg-card p-5 shadow-sm transition-colors hover:bg-card/70',
+          'flex gap-3 rounded-2xl bg-card p-5 shadow-sm transition-colors hover:bg-card/70 w-full',
           {
             'bg-primary/10': !notification.read,
           }
         )}
       >
-        <div className="mx-1">{icon}</div>
-        <div className="space-y-3">
+        <div className="mx-1 flex-shrink-0">{icon}</div>
+        <div className="space-y-3 flex-1 overflow-hidden">
           <UserAvatar avatarUrl={notification.issuer.avatarUrl} size={36} />
           <div>
             <span className="font-bold">
-              {notification.issuer.displayName}{' '}
               <span className="text-sm">{message}</span>
             </span>
           </div>
           {notification.post && (
-            <div className="line-clamp-3 whitespace-pre-line text-muted-foreground">
+            <p className="whitespace-pre-line line-clamp-3 text-muted-foreground break-words text-sm">
               {notification.post.content}
-            </div>
+            </p>
           )}
         </div>
       </article>
