@@ -16,13 +16,10 @@ export default async function MenuBar({ className }: MenuBarProps) {
 
   if (!user) return null;
 
-  // TODO: NOTIFICATION
-  const [unreadNotificationsCount] = await Promise.all([
+  const [unreadNotificationsCount, unreadMessagesCount] = await Promise.all([
     new NotificationService().getNotificationsCount(user.id),
     (await streamServerClient.getUnreadCount(user.id)).total_unread_count,
   ]);
-
-  // TODO: NOTIFICATION
 
   return (
     <div className={className}>
@@ -39,7 +36,7 @@ export default async function MenuBar({ className }: MenuBarProps) {
       <NotificationsButton
         initialState={{ unreadCount: unreadNotificationsCount }}
       />
-      <MessagesButton initialState={{ unreadCount: 0 }} />
+      <MessagesButton initialState={{ unreadCount: unreadMessagesCount }} />
       <Button
         variant="ghost"
         className="flex items-center justify-start gap-3"
