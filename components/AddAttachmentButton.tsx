@@ -16,6 +16,7 @@ export default function AddAttachmentButton(props: AddAttachmentsButtonProps) {
         size="icon"
         className="text-primary hover:text-primary"
         disabled={props.disabled}
+        onMouseDown={(e) => e.preventDefault()}
         onClick={() => fileInputRef.current?.click()}
       >
         <ImageIcon size={20} />

@@ -12,12 +12,16 @@ class CommentService extends Service {
     content: string;
     userId: string;
     postId: string;
+    mediaIds?: string[];
   }) {
     const newComment = await this.db.comment.create({
       data: {
         content: params.content,
         userId: params.userId,
         postId: params.postId,
+        attachments: {
+          connect: params.mediaIds?.map((mediaId) => ({ id: mediaId })),
+        },
       },
       include: this.prismaQueryHelper.getCommentDataInclude(params.userId),
     });

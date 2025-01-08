@@ -72,6 +72,7 @@ class PrismaQueryHelper {
       user: {
         select: this.getUserDataSelect(loggedInUserId),
       },
+      attachments: true,
     } satisfies Prisma.CommentInclude;
   }
 

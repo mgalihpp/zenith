@@ -1,6 +1,6 @@
 'use client';
 
-import { ImageIcon, SendHorizontal, Smile } from 'lucide-react';
+import { Loader2, SendHorizontal, Smile } from 'lucide-react';
 import { useSubmitCommentMutation } from './mutation';
 import React, { useState } from 'react';
 import { PostData } from '@/types/post';
@@ -18,6 +18,9 @@ import { useSession } from '@/hooks/useSession';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import LoadingButton from '@/components/LoadingButton';
+import { useMediaUpload } from '@/hooks/useMediaUpload';
+import AddAttachmentButton from '@/components/AddAttachmentButton';
+import AttachmentPreviews from '@/components/Post/Editor/AttachmentPreviews';
 
 type CommentInputProps = {
   post: PostData;
@@ -31,6 +34,16 @@ export default function CommentInput(props: CommentInputProps) {
   const [input, setInput] = useState('');
 
   const mutation = useSubmitCommentMutation();
+
+  const {
+    attachments,
+    isUploading,
+    removeAttachment,
+    reset,
+    startUpload,
+    uploadProgress,
+  } = useMediaUpload();
+
   async function onSubmit() {
     if (!input.trim()) return;
 
@@ -38,15 +51,18 @@ export default function CommentInput(props: CommentInputProps) {
       {
         post: props.post,
         content: input,
+        mediaIds: attachments.map((a) => a.mediaId).filter(Boolean) as string[],
       },
       {
         onSuccess: () => {
           setInput('');
           props.setOpen(false);
+          reset();
         },
       }
     );
   }
+
   return (
     <Dialog open={props.open} onOpenChange={props.setOpen}>
       <DialogContent>
@@ -77,7 +93,6 @@ export default function CommentInput(props: CommentInputProps) {
                       </p>
                       <span className="w-0.5 h-0.5 rounded-full bg-muted-foreground inline-block" />
                       <p
-                        // href={`/posts/${post.id}`}
                         className="block text-xs text-muted-foreground"
                         suppressHydrationWarning
                       >
@@ -113,11 +128,28 @@ export default function CommentInput(props: CommentInputProps) {
                   />
                 </div>
               </div>
+              <div>
+                {!!attachments.length && (
+                  <AttachmentPreviews
+                    attachments={attachments}
+                    removeAttachment={removeAttachment}
+                  />
+                )}
+                <div className="flex items-center justify-end gap-3 pb-2">
+                  {isUploading && (
+                    <>
+                      <span className="text-sm">{uploadProgress ?? 0}%</span>
+                      <Loader2 className="size-5 animate-spin text-primary" />
+                    </>
+                  )}
+                </div>
+              </div>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Button type="button" variant="ghost" size="icon">
-                    <ImageIcon size={20} />
-                  </Button>
+                  <AddAttachmentButton
+                    disabled={isUploading || attachments.length >= 5}
+                    onFilesSelected={startUpload}
+                  />
                   <Button type="button" variant="ghost" size="icon">
                     <Smile size={20} />
                   </Button>
