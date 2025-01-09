@@ -1,3 +1,4 @@
+import FollowingFeed from '@/components/Feed/FollowingFeed';
 import ForYouFeed from '@/components/Feed/ForYourFeed';
 import Navbar from '@/components/Navbar';
 import TrendSidebar from '@/components/Navbar/TrendSidebar';
@@ -23,7 +24,9 @@ export default function HomePage() {
           <TabsContent value="for you" className="border">
             <ForYouFeed />
           </TabsContent>
-          <TabsContent value="following">{/*  */}</TabsContent>
+          <TabsContent value="following" className="border">
+            <FollowingFeed />
+          </TabsContent>
         </Tabs>
       </div>
       <TrendSidebar />

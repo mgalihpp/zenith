@@ -59,9 +59,11 @@ export default function FollowingFeed() {
     <InfiniteScrollWrapper
       onBottomReached={() => hasNextPage && !isFetching && fetchNextPage()}
     >
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+      <div className="divide-y">
+        {posts.map((post) => (
+          <Post post={post} key={post.id} />
+        ))}
+      </div>
       {isFetchingNextPage && <Loader2 className="mx-auto my-3 animate-spin" />}
     </InfiniteScrollWrapper>
   );
