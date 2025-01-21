@@ -12,6 +12,8 @@ import {
 import { LogOut, User } from 'lucide-react';
 import Link from 'next/link';
 import { api } from '@/lib/api';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
 
 export default function UserDropdown({
   children,
@@ -19,9 +21,22 @@ export default function UserDropdown({
   children: React.ReactNode;
 }) {
   const session = useSession();
+  const router = useRouter();
+
+  const { toast } = useToast();
 
   const logout = async () => {
-    return await api.get('/session/logout');
+    return await api
+      .get('/session/logout')
+      .then(() => {
+        router.push('/login');
+      })
+      .catch(() => {
+        toast({
+          variant: 'destructive',
+          description: 'Failed to log out.',
+        });
+      });
   };
 
   return (
