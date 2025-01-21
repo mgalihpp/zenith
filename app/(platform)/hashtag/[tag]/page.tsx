@@ -12,7 +12,7 @@ type PageProps = {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
-export async function getPostByHastag(tag: string): Promise<PostData[] | []> {
+async function getPostByHastag(tag: string): Promise<PostData[] | []> {
   try {
     const postServices = new PostService();
     const { user } = await getSession();
