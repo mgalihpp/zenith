@@ -68,32 +68,62 @@ async function WhoToFollow() {
 
 const getTrendingTopics = unstable_cache(
   async () => {
-    const result = await db.$queryRaw<{ hashtag: string; count: bigint }[]>`
-  SELECT 
-    LOWER(TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1))) AS hashtag,
-    COUNT(*) AS count
-FROM (
-    SELECT content 
-    FROM posts 
-    WHERE content REGEXP '#[[:alnum:]_]+'
-) AS filtered_posts
-JOIN (
-    SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
-    UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
-) numbers
-ON CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(REPLACE(content, '\n', ' '), ' ', '')) >= numbers.n - 1
-WHERE 
-    SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1) REGEXP '^#[[:alnum:]_]+'
-GROUP BY hashtag
-ORDER BY count DESC, hashtag ASC
-LIMIT 5;
+    //     const result = await db.$queryRaw<{ hashtag: string; count: bigint }[]>`
+    //   SELECT
+    //     LOWER(TRIM(SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1))) AS hashtag,
+    //     COUNT(*) AS count
+    // FROM (
+    //     SELECT content
+    //     FROM posts
+    //     WHERE content REGEXP '#[[:alnum:]_]+'
+    // ) AS filtered_posts
+    // JOIN (
+    //     SELECT 1 AS n UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5
+    //     UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10
+    // ) numbers
+    // ON CHAR_LENGTH(content) - CHAR_LENGTH(REPLACE(REPLACE(content, '\n', ' '), ' ', '')) >= numbers.n - 1
+    // WHERE
+    //     SUBSTRING_INDEX(SUBSTRING_INDEX(REPLACE(content, '\n', ' '), ' ', numbers.n), ' ', -1) REGEXP '^#[[:alnum:]_]+'
+    // GROUP BY hashtag
+    // ORDER BY count DESC, hashtag ASC
+    // LIMIT 5;
 
-`;
+    // `;
 
-    return result.map((row) => ({
-      hashtag: row.hashtag,
-      count: Number(row.count),
-    }));
+    //     return result.map((row) => ({
+    //       hashtag: row.hashtag,
+    //       count: Number(row.count),
+    //     }));
+
+    const result = await db.post.findRaw({
+      filter: {
+        content: {
+          $regex: '#[a-zA-Z0-9_]+',
+        },
+      },
+    });
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore this work for mongodb, will fix error type later
+    const hashtagCounts = result?.reduce((acc, post) => {
+      const hashtags = post.content.match(/#[a-zA-Z0-9_]+/g) || []; // Extract hashtags
+      hashtags.forEach((tag: string) => {
+        const lowerTag = tag.toLowerCase();
+        acc[lowerTag] = (acc[lowerTag] || 0) + 1; // Increment count
+      });
+      return acc;
+    }, {});
+
+    // Convert to sorted array by count
+    const sortedHashtags = Object.entries(hashtagCounts)
+      .map(([hashtag, count]) => ({ hashtag, count }))
+      .sort(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (a: any, b: any) =>
+          b.count - a.count || a.hashtag.localeCompare(b.hashtag)
+      );
+
+    return sortedHashtags as { hashtag: string; count: number }[];
   },
   ['trending-topics'],
   {

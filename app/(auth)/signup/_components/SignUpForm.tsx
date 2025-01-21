@@ -52,7 +52,6 @@ export function SignUpForm({
         <CardContent className="grid p-0 md:grid-cols-2">
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="p-6 md:p-8">
-              {error && <p className="text-center text-destructive">{error}</p>}
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col items-center text-center">
                   <h1 className="text-2xl font-bold">Welcome to Zenith</h1>
@@ -106,6 +105,9 @@ export function SignUpForm({
                     )}
                   />
                 </div>
+                {error && (
+                  <p className="text-center text-destructive">{error}</p>
+                )}
                 <LoadingButton
                   loading={isPending}
                   type="submit"

@@ -15,6 +15,7 @@ import { Loader2 } from 'lucide-react';
 import AddAttachmentButton from '@/components/AddAttachmentButton';
 import LoadingButton from '@/components/LoadingButton';
 import './styles.css';
+import Link from 'next/link';
 
 export default function PostEditor() {
   const user = useSession();
@@ -82,7 +83,17 @@ export default function PostEditor() {
   return (
     <div className="hidden sm:flex sm:flex-col gap-2 rounded-2xl bg-card px-3 shadow-sm border">
       <div className="flex gap-2 w-full pt-2">
-        <UserAvatar avatarUrl={user?.avatarUrl} className="hidden sm:inline" />
+        <Link
+          href={`/user/${user?.username}`}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <UserAvatar
+            avatarUrl={user?.avatarUrl}
+            className="hidden sm:inline"
+          />
+        </Link>
         <div {...rootProps} className="w-full">
           <EditorContent
             editor={editor}

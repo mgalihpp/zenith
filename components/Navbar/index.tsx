@@ -73,7 +73,14 @@ export default function Navbar({ title = 'Zenith' }: NavbarProps) {
             <ChevronLeft />
           </Button>
         ) : (
-          <UserAvatar avatarUrl={user?.avatarUrl} size={32} />
+          <Link
+            href={`/user/${user?.username}`}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+          >
+            <UserAvatar avatarUrl={user?.avatarUrl} size={32} />
+          </Link>
         )}
         <Link href="/" className="text-2xl font-bold text-primary">
           {title}

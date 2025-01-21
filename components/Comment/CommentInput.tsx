@@ -159,7 +159,7 @@ export default function CommentInput(props: CommentInputProps) {
                     type="button"
                     className="rounded-full font-bold"
                     loading={mutation.isPending}
-                    disabled={!input.trim()}
+                    disabled={!input.trim() || isUploading}
                     onClick={(e) => {
                       e.stopPropagation();
                       onSubmit();

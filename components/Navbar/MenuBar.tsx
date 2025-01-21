@@ -6,6 +6,8 @@ import NotificationService from '@/services/notification.service';
 import { getSession } from '@/services/session.service';
 import MessagesButton from './MessagesButton';
 import streamServerClient from '@/lib/stream-chat';
+import UserDropdown from '@/components/User/UserDropdown';
+import UserAvatar from '@/components/User/UserAvatar';
 
 type MenuBarProps = {
   className?: string;
@@ -48,6 +50,20 @@ export default async function MenuBar({ className }: MenuBarProps) {
           <span className="hidden lg:inline">Bookmarks</span>
         </Link>
       </Button>
+
+      <UserDropdown>
+        <div className="flex gap-4">
+          <UserAvatar
+            avatarUrl={user.avatarUrl}
+            className="max-lg:w-6 max-lg:h-6 flex-none mx-auto w-10"
+          />
+
+          <div className="hidden lg:flex flex-col items-start">
+            <span className="font-bold">{user.displayName}</span>
+            <span className="text-muted-foreground">@{user.username}</span>
+          </div>
+        </div>
+      </UserDropdown>
     </div>
   );
 }
