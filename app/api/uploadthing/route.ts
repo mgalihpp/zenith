@@ -7,6 +7,6 @@ export const { GET, POST } = createRouteHandler({
   config: {
     // logLevel: 'Debug',
     callbackUrl: api.getBaseUrl() + '/api/uploadthing',
-    isDev: true,
+    isDev: process.env.NODE_ENV === 'development',
   },
 });
