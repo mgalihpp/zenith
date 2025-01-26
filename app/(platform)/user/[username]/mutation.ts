@@ -33,8 +33,9 @@ export function useUpdateUserProfileMutation() {
         data.avatar && startProfileImageUpload([data.avatar]),
       ]);
     },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     onSuccess: async ([updateUser, uploadResult]) => {
-      const newAvatarUrl = uploadResult?.[0].serverData.avatarUrl;
+      // const newAvatarUrl = uploadResult?.[0].serverData.avatarUrl;
 
       const queryFilter = {
         queryKey: ['post-feed'],
@@ -65,7 +66,8 @@ export function useUpdateUserProfileMutation() {
                         ...post,
                         user: {
                           ...updateUser,
-                          avatarUrl: newAvatarUrl || updateUser.avatarUrl,
+                          // avatarUrl: newAvatarUrl || updateUser.avatarUrl,
+                          avatarUrl: updateUser.avatarUrl,
                         },
                       };
                     }

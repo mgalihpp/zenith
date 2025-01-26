@@ -5,6 +5,7 @@ class MediaService extends Service {
     super();
   }
 
+  /** @deprecated */
   async createMedia(file: { url: string; type: string }) {
     const media = await this.db.media.create({
       data: {

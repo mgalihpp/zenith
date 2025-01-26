@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useToast } from './use-toast';
 import { useUploadThing } from '@/lib/uploadthing';
+import { api } from '@/lib/api';
+import { Media } from '@prisma/client';
 
 export interface Attachment {
   file: File;
@@ -34,7 +36,13 @@ export function useMediaUpload() {
       return renamedFiles;
     },
     onUploadProgress: setUploadProgress,
-    onClientUploadComplete(res) {
+    async onClientUploadComplete(res) {
+      const result = await api
+        .post<Media[]>('/api/media', {
+          json: res.map((r) => r),
+        })
+        .then((json) => json.data);
+
       setAttachments((prev) =>
         prev.map((a) => {
           const uploadResult = res.find((r) => r.name === a.file.name);
@@ -43,7 +51,7 @@ export function useMediaUpload() {
 
           return {
             ...a,
-            mediaId: uploadResult.serverData.mediaId,
+            mediaId: result.map((m) => m.id)[0],
             isUploading: false,
           };
         })

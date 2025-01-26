@@ -1,5 +1,5 @@
 import streamServerClient from '@/lib/stream-chat';
-import MediaService from '@/services/media.service';
+// import MediaService from '@/services/media.service';
 import { getSession } from '@/services/session.service';
 import UserService from '@/services/user.service';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
@@ -45,9 +45,10 @@ export const fileRouter = {
         }),
       ]);
 
-      return {
-        avatarUrl: newAvatar,
-      };
+      // ERROR: CALLBACK FAILED IDK WHAT HAPPENED TO UPLOADTHING WTF
+      // return {
+      //   avatarUrl: newAvatar,
+      // };
     }),
   attachment: f({
     image: { maxFileSize: '4MB', maxFileCount: 5 },
@@ -60,10 +61,10 @@ export const fileRouter = {
 
       return {};
     })
-    .onUploadComplete(async ({ file }) => {
-      const media = await new MediaService().createMedia(file);
-
-      return { mediaId: media.id };
+    .onUploadComplete(async () => {
+      // ERROR: CALLBACK FAILED IDK WHAT HAPPENED TO UPLOADTHING WTF
+      // const media = await new MediaService().createMedia(file);
+      // return { mediaId: media.id };
     }),
 } satisfies FileRouter;
 
