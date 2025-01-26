@@ -1,9 +1,9 @@
-import streamServerClient from '@/lib/stream-chat';
+// import streamServerClient from '@/lib/stream-chat';
 // import MediaService from '@/services/media.service';
 import { getSession } from '@/services/session.service';
-import UserService from '@/services/user.service';
+// import UserService from '@/services/user.service';
 import { createUploadthing, type FileRouter } from 'uploadthing/next';
-import { UploadThingError, UTApi } from 'uploadthing/server';
+import { UploadThingError } from 'uploadthing/server';
 
 const f = createUploadthing();
 
@@ -19,32 +19,27 @@ export const fileRouter = {
 
       return { user };
     })
-    .onUploadComplete(async ({ metadata, file }) => {
-      const oldAvatar = metadata.user.avatarUrl;
-
-      if (oldAvatar) {
-        const key = oldAvatar.split(
-          `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`
-        )[1];
-
-        await new UTApi().deleteFiles(key);
-      }
-
-      const newAvatar = file.url.replace(
-        '/f/',
-        `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`
-      );
-
-      await Promise.all([
-        new UserService().updateUserAvatar(metadata.user.id, newAvatar),
-        streamServerClient.partialUpdateUser({
-          id: metadata.user.id,
-          set: {
-            image: newAvatar,
-          },
-        }),
-      ]);
-
+    .onUploadComplete(async () => {
+      // const oldAvatar = metadata.user.avatarUrl;
+      // if (oldAvatar) {
+      //   const key = oldAvatar.split(
+      //     `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`
+      //   )[1];
+      //   await new UTApi().deleteFiles(key);
+      // }
+      // const newAvatar = file.url.replace(
+      //   '/f/',
+      //   `/a/${process.env.NEXT_PUBLIC_UPLOADTHING_APP_ID}/`
+      // );
+      // await Promise.all([
+      //   new UserService().updateUserAvatar(metadata.user.id, newAvatar),
+      //   streamServerClient.partialUpdateUser({
+      //     id: metadata.user.id,
+      //     set: {
+      //       image: newAvatar,
+      //     },
+      //   }),
+      // ]);
       // ERROR: CALLBACK FAILED IDK WHAT HAPPENED TO UPLOADTHING WTF
       // return {
       //   avatarUrl: newAvatar,

@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/navigation';
 import { UpdateUser } from './action';
 import { PostsPage } from '@/types/post';
+import { api } from '@/lib/api';
 
 type Payload = {
   avatar?: File;
@@ -24,7 +25,16 @@ export function useUpdateUserProfileMutation() {
 
   const queryClient = useQueryClient();
 
-  const { startUpload: startProfileImageUpload } = useUploadThing('avatar');
+  const { startUpload: startProfileImageUpload } = useUploadThing('avatar', {
+    async onClientUploadComplete(res) {
+      // Alternate way to fix callback error from uploadthing idk why its not work in prod
+      await api
+        .post('/api/users/avatarupdate', {
+          json: res[0],
+        })
+        .then((json) => json.data);
+    },
+  });
 
   const mutation = useMutation({
     mutationFn: async (data: Payload) => {
